@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+@theme {
+  --color-porcelain: var(--color-porcelain, #F8F9FA);
+  --color-porcelain-50: #FFFFFF;
+  --color-porcelain-100: #F8F9FA;
+  --color-porcelain-200: #F1F3F5;
+  --color-porcelain-300: #E9ECEF;
+  --color-porcelain-400: #CED4DA;
+  --color-porcelain-500: #ADB5BD;
+  --color-porcelain-600: #6C757D;
+  --color-porcelain-700: #495057;
+  --color-porcelain-800: #343A40;
+  --color-porcelain-900: #1A1D20;
+  --color-porcelain-950: #111113;
+
+  --color-onyx: var(--color-onyx, #111113);
+  --color-subtle: #71717A;
+  --color-accent: #2563EB;
+  --color-accent-soft: rgba(37, 99, 235, 0.7);
+
+  --font-display: 'Oswald', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+
+  --tracking-tightest: -0.05em;
+  --tracking-tighter: -0.03em;
+  --tracking-tight: -0.01em;
+  --tracking-editorial: -0.02em;
+}
+
+@layer base {
+  :root {
+    --color-porcelain: #F8F9FA;
+    --color-onyx: #111113;
+    --color-accent: #2563EB;
+  }
+
+  html.dark {
+    --color-porcelain: #090A0D;
+    --color-onyx: #F8F9FA;
+    --color-accent: #3B82F6;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-porcelain);
+    color: var(--color-onyx);
+    transition: background-color 0.4s ease, color 0.4s ease;
+    text-rendering: optimizeLegibility;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern" 1, "grad" 1, "pnum" 1;
+  }
+
+  body {
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+}
+
+.glass-island {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+html.dark .glass-island {
+  background: rgba(18, 19, 24, 0.82);
+  backdrop-filter: blur(14px) saturate(180%);
+  -webkit-backdrop-filter: blur(14px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+}
+
+/* Lenis smooth scrolling rules */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Custom editorial typography & fine utilities */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+/* Subtle architectural grid pattern background */
+.bg-editorial-grid {
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+html.dark .bg-editorial-grid {
+  background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #F8F9FA;
+  transition: background-color 0.4s ease;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4D4D8;
+  border-radius: 9999px;
+  transition: background-color 0.4s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A1A1AA;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #090A0D;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #27272A;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #3F3F46;
+}
+
+/* Comprehensive Dark Mode Theme Overrides */
+html.dark .bg-\[\#F8F9FA\] {
+  background-color: #090A0D !important;
+}
+
+html.dark .bg-porcelain {
+  background-color: #090A0D !important;
+}
+
+html.dark .bg-white {
+  background-color: #121319 !important;
+}
+
+html.dark .bg-white\/85 {
+  background-color: rgba(18, 19, 24, 0.85) !important;
+}
+
+html.dark .bg-white\/50 {
+  background-color: rgba(24, 25, 32, 0.6) !important;
+}
+
+html.dark .bg-black\/3,
+html.dark .bg-black\/5 {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+html.dark .text-\[\#111113\],
+html.dark .text-onyx {
+  color: #F8F9FA !important;
+}
+
+html.dark .text-\[\#52525B\],
+html.dark .text-\[\#27272A\] {
+  color: #A1A1AA !important;
+}
+
+html.dark .text-zinc-600,
+html.dark .text-zinc-500 {
+  color: #A1A1AA !important;
+}
+
+html.dark .border-black\/5,
+html.dark .border-black\/8,
+html.dark .border-black\/10,
+html.dark .border-black\/15,
+html.dark .border-black\/2,
+html.dark .border-black\/3,
+html.dark .border-black\/4,
+html.dark .border-black\/6 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark input,
+html.dark textarea,
+html.dark select {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  color: #F8F9FA !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+html.dark select option {
+  background-color: #121319 !important;
+  color: #F8F9FA !important;
+}
