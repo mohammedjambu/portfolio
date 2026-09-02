@@ -123,10 +123,16 @@ export default function ProcessSection() {
     <section
       id="process"
       ref={containerRef}
-      className="relative py-32 md:py-48 bg-porcelain overflow-hidden transition-colors duration-700"
+      className="relative py-20 md:py-36 bg-porcelain overflow-hidden transition-colors duration-700 scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full relative z-10">
-        <div className="mb-24 flex flex-col md:flex-row items-end justify-between gap-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-24 flex flex-col md:flex-row items-end justify-between gap-10"
+        >
           <div>
             <SectionLabel number="05" title="THE METHOD" />
             <h2 className="text-4xl md:text-6xl font-display font- tracking-tight mt-6 leading-[0.8] text-onyx transition-colors duration-700">
@@ -140,7 +146,7 @@ export default function ProcessSection() {
             A clear process from the first conversation to the final
             launch.{" "}
           </p>
-        </div>
+        </motion.div>
 
         <div className="relative">
           <div className="absolute inset-0 pointer-events-none hidden md:block">

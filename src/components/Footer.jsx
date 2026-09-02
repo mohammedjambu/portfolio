@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUp, ArrowRight, ArrowUpRight } from 'lucide-react';
 import DinoGame from './DinoGame';
+import { scrollToSection } from '../utils/scrollToSection';
 
 const GithubIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -41,10 +42,12 @@ const SOCIAL_LINKS = [
 ];
 
 const NAV_LINKS = [
-  { label: 'About', href: '#about' },
+  // { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
-  { label: 'Tech Stack', href: '#tech' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Tech Stack', href: '#tech' },
+  { label: 'Process', href: '#process' },
+  { label: 'FAQs', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -60,12 +63,12 @@ export default function Footer() {
 
   const scrollToTop = (e) => {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    scrollToSection('home');
   };
 
   const handleNavClick = (e, href) => {
     e.preventDefault();
-    document.getElementById(href.replace('#', ''))?.scrollIntoView({ behavior: 'smooth' });
+    scrollToSection(href);
   };
 
   return (
@@ -108,12 +111,12 @@ export default function Footer() {
             </div>
           </motion.div>
 
-          {/* NAVIGATION */}
+          {/* NAVIGATION (TWO COLUMNS) */}
           <motion.div variants={itemVariants} className="lg:col-span-3 flex flex-col gap-4">
             <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle/50 uppercase block">
               Explore
             </span>
-            <nav className="flex flex-col gap-2.5">
+            <nav className="grid grid-cols-2 gap-x-6 gap-y-2.5">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.label}
@@ -125,7 +128,7 @@ export default function Footer() {
                     {link.label}
                     <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                   </span>
-                  <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ml-2" />
+                  <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ml-1.5" />
                 </a>
               ))}
             </nav>

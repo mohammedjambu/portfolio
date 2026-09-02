@@ -26,7 +26,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative py-32 md:py-48 bg-porcelain border-t border-border-subtle min-h-screen flex flex-col justify-center overflow-hidden transition-colors duration-700"
+      className="relative py-20 md:py-32 bg-porcelain border-t border-border-subtle min-h-screen flex flex-col justify-center overflow-hidden transition-colors duration-700 scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <motion.div
@@ -84,6 +84,10 @@ export default function About() {
               ].map((card, i) => (
                 <motion.div
                   key={i}
+                  initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
                   whileHover={{ y: -5 }}
                   className="p-6 rounded-3xl bg-surface/50 border border-border-subtle flex items-start gap-4 transition-all duration-500 shadow-sm hover:shadow-xl"
                 >
@@ -111,13 +115,17 @@ export default function About() {
                 "📍 India / Remote",
                 "⚡ Full Stack",
                 "🤝 Open to Collaborate",
-              ].map((tag) => (
-                <span
+              ].map((tag, idx) => (
+                <motion.span
                   key={tag}
+                  initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
+                  whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                   className="px-4 py-2 rounded-full bg-onyx/5 border border-border-subtle text-[10px] font-bold uppercase tracking-widest text-subtle shadow-2xs"
                 >
                   {tag}
-                </span>
+                </motion.span>
               ))}
             </motion.div>
           </motion.div>

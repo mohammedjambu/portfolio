@@ -7,6 +7,7 @@ import {
 } from "framer-motion";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 import SpringSwitch from "../utils/SpringSwitch";
+import { scrollToSection } from "../utils/scrollToSection";
 
 const NAV_ITEMS = [
   { label: "Home", href: "#home" },
@@ -57,8 +58,7 @@ export default function Navbar() {
   const handleNavClick = (e, href) => {
     e.preventDefault();
     setMobileOpen(false);
-    const targetId = href.replace("#", "");
-    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+    scrollToSection(href);
   };
 
   const showAvailability = isScrolled && scrollDirection === "down";

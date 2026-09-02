@@ -20,8 +20,8 @@ export default function HeroImageTransition() {
     restDelta: 0.0001,
   });
 
-  const yDesktop = useTransform(smoothScrollY, [0, 800], ["0px", "950px"]);
-  const xDesktop = useTransform(smoothScrollY, [0, 700], ["0px", "450px"]);
+  const yDesktop = useTransform(smoothScrollY, [0, 800], ["0px", "850px"]);
+  const xDesktop = useTransform(smoothScrollY, [0, 700], ["0px", "400px"]);
   const scaleDesktop = useTransform(smoothScrollY, [0, 800], [1, 0.95]);
 
   const yMobile = useTransform(smoothScrollY, [0, 800], ["0px", "750px"]);

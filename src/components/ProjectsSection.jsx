@@ -191,7 +191,7 @@ export default function ProjectsSection() {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative bg-porcelain-100 bg-editorial-grid border-t border-black/10 min-h-[380vh] md:min-h-[420vh]"
+      className="relative bg-porcelain-100 bg-editorial-grid border-t mb-28 border-black/10 min-h-[380vh] md:min-h-[420vh]"
     >
       {/* DESKTOP & TABLET HORIZONTAL PINNED SHOWCASE VIEW */}
       <div
@@ -199,7 +199,13 @@ export default function ProjectsSection() {
         className="hidden md:flex sticky top-0 h-screen py-6 flex-col justify-between overflow-hidden select-none z-10"
       >
         {/* SECTION HEADER */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full shrink-0 pt-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-7xl mx-auto px-6 lg:px-8 w-full shrink-0 pt-12"
+        >
           <div className="flex items-end justify-between gap-6 border-b border-black/10 pb-4">
             <div>
               <div className="mb-2">
@@ -222,7 +228,7 @@ export default function ProjectsSection() {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* MAIN HORIZONTAL SCROLL SHOWCASE TRACK */}
         <div className="relative w-full flex-1 flex items-center overflow-hidden my-auto mt-8 py-4">
@@ -318,12 +324,16 @@ export default function ProjectsSection() {
         {/* Vertical Editorial Cards */}
         <div className="space-y-16">
           {PROJECTS_DATA.map((project) => (
-            <div
+            <motion.div
               key={project.id}
+              initial={{ opacity: 0, y: 35, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="bg-white border border-black/10 rounded-2xl p-5 shadow-lg space-y-6"
             >
               <ProjectCard project={project} isActive={true} />
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

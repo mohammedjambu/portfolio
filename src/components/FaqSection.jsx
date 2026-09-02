@@ -33,9 +33,15 @@ const FAQS = [
   },
 ];
 
-const AccordionItem = ({ faq, isOpen, toggle }) => {
+const AccordionItem = ({ faq, isOpen, toggle, index }) => {
   return (
-    <div className="border-b border-border-subtle overflow-hidden transition-colors duration-700">
+    <motion.div
+      initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      className="border-b border-border-subtle overflow-hidden transition-colors duration-700"
+    >
       <button
         onClick={toggle}
         className="w-full py-6 md:py-8 flex items-center justify-between text-left group outline-none"
@@ -70,7 +76,7 @@ const AccordionItem = ({ faq, isOpen, toggle }) => {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 };
 
@@ -138,6 +144,7 @@ export default function FaqSection() {
               {FAQS.map((faq, index) => (
                 <AccordionItem
                   key={index}
+                  index={index}
                   faq={faq}
                   isOpen={openIndex === index}
                   toggle={() => setOpenIndex(openIndex === index ? -1 : index)}

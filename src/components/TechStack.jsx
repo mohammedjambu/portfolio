@@ -144,7 +144,7 @@ export default function TechStack() {
   return (
     <section
       id="tech"
-      className="relative py-32 md:py-48 bg-porcelain overflow-hidden transition-colors duration-700"
+      className="relative py-32 md:py-16 bg-porcelain overflow-hidden transition-colors duration-700 scroll-mt-20"
     >
       <div
         className="absolute inset-0 opacity-[0.08] pointer-events-none transition-opacity duration-700"
@@ -154,7 +154,13 @@ export default function TechStack() {
         }}
       />
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-        <div className="mb-12 flex flex-col md:flex-row items-end justify-between gap-10">
+        <motion.div
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-12 flex flex-col md:flex-row items-end justify-between gap-10"
+        >
           <div>
             <SectionLabel number="05" title="THE STACK" />
             <h2 className="text-4xl md:text-6xl font-display font-medium tracking-tighter mt-6 leading-[0.8] text-onyx">
@@ -171,24 +177,36 @@ export default function TechStack() {
             interfaces, scalable applications, and reliable digital products.
             </span>
           </p>
-        </div>
+        </motion.div>
 
         {/* Tickers with horizontal bleed fix */}
-        <div className="flex flex-col gap-8 -mx-10 md:-mx-20">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98, filter: "blur(6px)" }}
+          whileInView={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col gap-8 -mx-10 md:-mx-20"
+        >
           <TickerRow items={TECH_STACK.frontend} baseVelocity={-1.5} />
           <TickerRow items={TECH_STACK.backend} baseVelocity={1.5} />
           <TickerRow items={TECH_STACK.database} baseVelocity={-1.2} />
           <TickerRow items={TECH_STACK.tools} baseVelocity={1.2} />
-        </div>
+        </motion.div>
 
-        <div className="mt-8 flex justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-8 flex justify-center"
+        >
           <div className="flex items-center gap-4 px-8 py-3 rounded-full bg-surface border border-black/5 hover:scale-105 transition-all duration-500 shadow-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span className="text-[12px] font-bold font-mono uppercase tracking-[0.2em] text-onyx">
               FROM INTERFACE TO INFRASTRUCTURE
             </span>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

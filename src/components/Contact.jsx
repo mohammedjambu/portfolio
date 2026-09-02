@@ -239,7 +239,13 @@ ${formData.message.trim()}`;
               <span className="text-onyx/70"> I turn it into a polished, scalable digital product — from first screen to final deployment.</span>
             </motion.p>
 
-            <div className="mt-8 flex items-center gap-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 flex items-center gap-4"
+            >
                <div className="relative">
                   <div className="w-3 h-3 rounded-full bg-emerald-500 animate-ping absolute" />
                   <div className="w-3 h-3 rounded-full bg-emerald-500 relative" />
@@ -247,13 +253,17 @@ ${formData.message.trim()}`;
                <span className="text-xs font-bold font-mono uppercase tracking-widest text-onyx transition-colors duration-700">
                  Available for freelance work
                </span>
-            </div>
+            </motion.div>
 
             {/* PREMIUM ATTRACTIVE BOOK A CALL CARD */}
             <motion.a
               href="https://wa.me/919106310886?text=Hi%20Mohammed,%20I'd%20like%20to%20book%20a%2015-minute%20free%20introductory%20call."
               target="_blank"
               rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 25, filter: "blur(6px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
               className="mt-8 p-6 rounded-3xl bg-surface border border-border-subtle hover:border-accent/40 shadow-xl transition-all duration-500 flex items-center justify-between group cursor-pointer"
@@ -278,7 +288,13 @@ ${formData.message.trim()}`;
             </motion.a>
 
             {/* TIME & LOCATION CONTENT */}
-            <div className="mt-8 grid grid-cols-2 gap-8 border-t border-border-subtle pt-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-8 grid grid-cols-2 gap-8 border-t border-border-subtle pt-8"
+            >
                <div>
                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-subtle mb-2">Current Time</h4>
                  <p className="text-sm font-mono text-onyx font-bold uppercase tracking-wider">{indianTime || '12:00 PM'} IST </p>
@@ -287,7 +303,7 @@ ${formData.message.trim()}`;
                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-subtle mb-2">Based in</h4>
                  <p className="text-sm font-mono text-onyx font-bold uppercase tracking-wider transition-colors duration-700">Dahod, Gujarat — India</p>
                </div>
-            </div>
+            </motion.div>
           </div>
 
 

@@ -132,8 +132,12 @@ export default function ServicesSection() {
               {SERVICES_DATA.map((service, index) => {
                 const isActive = activeIndex === index;
                 return (
-                  <div
+                  <motion.div
                     key={service.id}
+                    initial={{ opacity: 0, x: 30, filter: "blur(4px)" }}
+                    whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
                     className="relative group w-full text-left py-4 sm:py-6 px-6 sm:px-8 rounded-2xl sm:rounded-3xl transition-all duration-500 cursor-pointer"
                   >
                     {isActive && (
@@ -146,7 +150,7 @@ export default function ServicesSection() {
 
                     <div className="relative z-10 flex items-center justify-between">
                       <div className="flex items-center gap-6 sm:gap-12">
-                        <span className={`font-mono text-[10px] sm:text-xs font-bold transition-colors duration-500 ${isActive ? 'text-porcelain/50' : 'text-subtle'}`}>
+                        <span className={`font-mono text-[10px] sm:text-sm font-bold transition-colors duration-500 ${isActive ? 'text-porcelain/70' : 'text-subtle'}`}>
                           ({service.id})
                         </span>
                         <h3 className={`text-lg sm:text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500 ${isActive ? 'text-porcelain' : 'text-onyx'}`}>
@@ -160,7 +164,7 @@ export default function ServicesSection() {
                         <ArrowRight size={18} />
                       </motion.div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>

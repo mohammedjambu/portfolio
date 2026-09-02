@@ -18,11 +18,12 @@ export default function App() {
   // Initialize Lenis for smooth scrolling with a premium feel
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.5, // Slightly slower for a "premium" feel
+      duration: 1.4, // Slower for a "premium" feel
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
       touchMultiplier: 2,
     });
+    window.__lenis = lenis;
 
     function raf(time) {
       lenis.raf(time);
@@ -30,7 +31,10 @@ export default function App() {
     }
 
     requestAnimationFrame(raf);
-    return () => lenis.destroy();
+    return () => {
+      delete window.__lenis;
+      lenis.destroy();
+    };
   }, []);
 
   return (
