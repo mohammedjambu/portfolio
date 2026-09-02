@@ -40,10 +40,9 @@ export default function MagneticButton({
   const baseStyles = "relative inline-flex items-center justify-center font-medium transition-colors duration-300 overflow-hidden cursor-pointer select-none group";
   
   const variants = {
-    primary: "bg-[#111113] text-white px-6 py-3 rounded-full shadow-sm hover:bg-[#27272A] border border-black/10 text-sm tracking-wide",
-    secondary: "bg-transparent text-[#111113] px-6 py-3 rounded-full border border-[#111113]/20 hover:border-[#111113] text-sm tracking-wide",
-    ghost: "bg-white/80 text-[#111113] px-5 py-2.5 rounded-full border border-black/5 hover:bg-white text-xs uppercase tracking-wider font-semibold",
-    navContact: "bg-[#111113] text-white px-5 py-2 rounded-full text-xs font-semibold tracking-wider hover:bg-[#27272A] shadow-sm transition-all duration-300"
+    primary: "bg-onyx text-porcelain shadow-xl rounded-full hover:opacity-90 border border-border-subtle text-xs px-6 py-2",
+    secondary: "bg-transparent text-onyx border rounded-full border-border-subtle hover:bg-onyx/5 text-xs px-6 py-2",
+    ghost: "bg-surface/80 backdrop-blur-md text-onyx border border-border-subtle hover:bg-surface text-[10px] px-6 py-3",
   };
 
   const Component = href ? motion.a : motion.button;

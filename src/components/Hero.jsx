@@ -85,7 +85,7 @@ export default function Hero({ sectionRef }) {
 
               {/* Supporting Description Copy & CTAs positioned directly below Developer text */}
               <div className="mt-4 lg:mt-6 max-w-md flex flex-col items-center lg:items-start gap-5">
-                <p className="text-sm sm:text-base md:text-lg font-normal text-[#52525B] leading-relaxed tracking-tight text-center lg:text-left">
+                <p className="text-sm sm:text-base md:text-lg font-normal text-onyx leading-relaxed tracking-tight text-center lg:text-left">
                   I take an idea, shape the experience, and build everything
                   that makes it come alive.
                 </p>

@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
-import SectionLabel from './SectionLabel';
+import SectionLabel from '../utils/SectionLabel';
 import ProjectCard from './ProjectCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import MotionButton from './Extras/MotionButton';
+
 
 export const PROJECTS_DATA = [
   {
@@ -12,7 +14,7 @@ export const PROJECTS_DATA = [
     title: 'SOLARTILE',
     tagline: 'Making clean energy easier to understand.',
     description: 'A modern solar platform designed to make exploring and understanding solar solutions simple, clear, and intuitive.',
-    technologies: ['React', 'Vite', 'Tailwind CSS'],
+    technologies: ['React', 'Framer', 'Tailwind CSS'],
     githubUrl: null,
     liveUrl: 'https://www.smartsolarsolution.in/',
     themeGlow: 'from-amber-500/20 to-yellow-600/20',
@@ -36,9 +38,9 @@ export const PROJECTS_DATA = [
     title: 'RESTUARA',
     tagline: 'An atmosphere before the first reservation.',
     description: 'A cinematic restaurant experience designed to bring the atmosphere of the dining space to the web through immersive visuals, smooth animations, and an elegant modern interface.',
-    technologies: ['React', 'Vite', 'Tailwind CSS'],
-    githubUrl: 'https://github.com/mohammedjambu/Restuara',
-    liveUrl: null,
+    technologies: ['React', 'Framer', 'Tailwind CSS'],
+    githubUrl: null,
+    liveUrl: 'https://restaura-5ea34.netlify.app/',
     themeGlow: 'from-rose-500/20 to-red-600/20',
   },
   {
@@ -49,7 +51,7 @@ export const PROJECTS_DATA = [
     tagline: 'Making the journey behind every delivery visible.',
     description: 'A logistics platform that brings orders, deliveries, and operational workflows into one connected system, making everyday logistics easier to manage and understand.',
     technologies: ['React', 'Node.js', 'Express', 'MongoDB', 'Chart.js'],
-    githubUrl: 'https://github.com/mohammedjambu/Green-Cart-Logistics',
+    githubUrl: null,
     liveUrl: null,
     themeGlow: 'from-teal-500/20 to-cyan-600/20',
   },
@@ -209,13 +211,13 @@ export default function ProjectsSection() {
             </div>
             <div className="flex flex-col items-end gap-1">
               <div className="flex items-center gap-2 font-mono text-sm font-bold text-porcelain-950">
-                <span className="text-base text-porcelain-950">
+                <span className="text-base text-onyx">
                   {PROJECTS_DATA[activeProjectIndex].number}
                 </span>
-                <span className="text-black/30">/</span>
-                <span className="text-black/40">05</span>
+                <span className="text-onyx/50">/</span>
+                <span className="text-onyx/70">05</span>
               </div>
-              <p className="text-xs sm:text-sm text-zinc-600 max-w-sm font-medium leading-relaxed">
+              <p className="text-xs sm:text-base text-zinc tracking-wider max-w-sm font-mono ">
                 Every project starts differently. What matters is turning the right idea into something useful, considered, and real.
               </p>
             </div>
@@ -257,10 +259,10 @@ export default function ProjectsSection() {
             <div className="relative flex-1 h-0.5 bg-black/10 rounded-full overflow-hidden">
               <motion.div
                 style={{ width: smoothProgressWidth }}
-                className="h-full bg-porcelain-950"
+                className="h-full bg-onyx"
               />
             </div>
-            <span className="text-black/40 text-xs">05</span>
+            <span className="text-onyx/70 text-xs">05</span>
           </div>
 
           {/* Active Storytelling Chapter Label */}
@@ -270,36 +272,33 @@ export default function ProjectsSection() {
 
           {/* Navigation Jump Controls */}
           <div className="flex items-center gap-3">
-            <button
+            <MotionButton
               onClick={() => scrollToIndex(activeProjectIndex - 1)}
               disabled={activeProjectIndex === 0}
-              className={`px-3 py-1.5 rounded-full border border-black/15 transition-all duration-300 flex items-center gap-1.5 font-sans font-medium text-xs ${
-                activeProjectIndex === 0
-                  ? 'opacity-30 cursor-not-allowed border-black/5'
-                  : 'hover:bg-porcelain-950 hover:text-white hover:border-porcelain-950 active:scale-95 text-porcelain-950'
-              }`}
-              title="Previous Project"
+              variant="outline"
+              size="sm"
+              icon={<ChevronLeft className="w-3.5 h-3.5" />}
+              iconPosition="left"
               aria-label="Previous project"
+              title="Previous Project"
             >
-              <ChevronLeft className="w-3.5 h-3.5" />
-              <span>PREV</span>
-            </button>
+              PREV
+            </MotionButton>
 
-            <button
+            <MotionButton
               onClick={() => scrollToIndex(activeProjectIndex + 1)}
               disabled={activeProjectIndex === PROJECTS_DATA.length - 1}
-              className={`px-3 py-1.5 rounded-full border border-black/15 transition-all duration-300 flex items-center gap-1.5 font-sans font-medium text-xs ${
-                activeProjectIndex === PROJECTS_DATA.length - 1
-                  ? 'opacity-30 cursor-not-allowed border-black/5'
-                  : 'hover:bg-porcelain-950 hover:text-white hover:border-porcelain-950 active:scale-95 text-porcelain-950'
-              }`}
-              title="Next Project"
+              variant="outline"
+              size="sm"
+              icon={<ChevronRight className="w-3.5 h-3.5" />}
+              iconPosition="right"
               aria-label="Next project"
+              title="Next Project"
             >
-              <span>NEXT</span>
-              <ChevronRight className="w-3.5 h-3.5" />
-            </button>
+              NEXT
+            </MotionButton>
           </div>
+
         </div>
       </div>
 

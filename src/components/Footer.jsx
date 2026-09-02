@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowUpRight, ArrowUp, ArrowRight } from 'lucide-react';
+import { ArrowUp, ArrowRight, ArrowUpRight } from 'lucide-react';
 import DinoGame from './DinoGame';
 
 const GithubIcon = ({ className = "w-3.5 h-3.5" }) => (
@@ -34,17 +34,18 @@ const MailIcon = ({ className = "w-3.5 h-3.5" }) => (
 );
 
 const SOCIAL_LINKS = [
-  { label: 'GitHub', href: 'https://github.com', icon: GithubIcon },
-  { label: 'LinkedIn', href: 'https://linkedin.com', icon: LinkedinIcon },
+  { label: 'Email', href: 'mailto:mohammedjambughoda52@gmail.com', icon: MailIcon },
+  { label: 'GitHub', href: 'https://github.com/mohammedjambu', icon: GithubIcon },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mohammed-jambughoda', icon: LinkedinIcon },
   { label: 'Instagram', href: 'https://instagram.com', icon: InstagramIcon },
-  { label: 'Email', href: 'mailto:mohammedjambughoda12@gmail.com', icon: MailIcon },
 ];
 
 const NAV_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
-  { label: 'Tech Stack', href: '#services' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Tech Stack', href: '#tech' },
+  { label: 'FAQs', href: '#faq' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -60,65 +61,46 @@ export default function Footer() {
 
   const scrollToTop = (e) => {
     e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNavClick = (e, href) => {
     e.preventDefault();
-    const targetId = href.replace('#', '');
-    const element = document.getElementById(targetId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    document.getElementById(href.replace('#', ''))?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <footer
       id="footer"
-      className="relative bg-porcelain-100 text-porcelain-950 pt-20 pb-8 overflow-hidden border-t border-black/8 selection:bg-porcelain-950 selection:text-white"
+      className="relative bg-porcelain text-onyx pt-20 pb-8 overflow-hidden border-t border-border-subtle transition-colors duration-700"
     >
-      {/* Subtle background radial texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.015] bg-[radial-gradient(#000_1px,transparent_1px)] bg-size-[24px_24px]" />
+      {/* Dynamic radial texture using var(--onyx) */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.015] bg-[radial-gradient(var(--onyx)_1px,transparent_1px)] bg-size-[24px_24px]" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-        
-        {/* --- LAYER 1: BRAND, NAVIGATION & ELSEWHERE GRID --- */}
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-          }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 items-start pb-8 border-b border-black/6"
+          variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 items-start pb-8 border-b border-border-subtle"
         >
-          
           {/* BRAND */}
-          <motion.div
-            variants={itemVariants}
-            className="lg:col-span-5 flex flex-col gap-3.5"
-          >
+          <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-[14px] font-mono font-bold tracking-wider text-porcelain-950">
+              <div className="w-8 h-8 rounded-full bg-onyx text-porcelain border border-border-subtle flex items-center justify-center text-[14px] font-mono font-bold tracking-wider transition-colors duration-700">
                 MJ
               </div>
-              <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-porcelain-950 uppercase">
+              <span className="font-display text-xl sm:text-2xl font-bold tracking-tight uppercase">
                 MOHAMMED JAMBUGHODA
               </span>
             </div>
-
             <span className="font-mono text-sm text-subtle tracking-widest uppercase pl-0.5">
               Full-Stack Developer
             </span>
-
-            <p className="text-md text-[#52525B] leading-relaxed max-w-sm font-normal pt-0.5">
+            <p className="text-md text-subtle tracking-wider leading-relaxed max-w-sm font-normal pt-0.5">
               Building thoughtful digital products where clean interfaces meet solid engineering.
             </p>
-
             <div className="pt-1">
               <span className="text-sm font-mono text-subtle inline-flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -128,43 +110,32 @@ export default function Footer() {
           </motion.div>
 
           {/* NAVIGATION */}
-          <motion.div
-            variants={itemVariants}
-            className="lg:col-span-3 flex flex-col gap-4"
-          >
-            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-[#A1A1AA] uppercase block">
+          <motion.div variants={itemVariants} className="lg:col-span-3 flex flex-col gap-4">
+            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle/50 uppercase block">
               Explore
             </span>
-
             <nav className="flex flex-col gap-2.5">
               {NAV_LINKS.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="group flex items-center justify-between py-0.5 text-md font-medium text-[#52525B] hover:text-porcelain-950 transition-colors duration-300 w-fit focus:outline-none focus:ring-1 focus:ring-black/20 rounded-xs"
+                  className="group flex items-center justify-between py-0.5 text-md font-medium text-subtle hover:text-onyx transition-colors duration-300 w-fit"
                 >
                   <span className="transition-transform duration-300 group-hover:translate-x-1.5">
                     {link.label}
                   </span>
-                  <ArrowRight
-                    size={14}
-                    className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 text-porcelain-950 ml-2"
-                  />
+                  <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ml-2" />
                 </a>
               ))}
             </nav>
           </motion.div>
 
           {/* ELSEWHERE */}
-          <motion.div
-            variants={itemVariants}
-            className="lg:col-span-4 flex flex-col gap-4"
-          >
-            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-[#A1A1AA] uppercase block">
+          <motion.div variants={itemVariants} className="lg:col-span-4 flex flex-col gap-4">
+            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle/50 uppercase block">
               Elsewhere
             </span>
-
             <div className="flex flex-col gap-2.5">
               {SOCIAL_LINKS.map((social) => {
                 const IconComponent = social.icon;
@@ -174,26 +145,21 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 text-xs sm:text-lg font-mono text-[#52525B] hover:text-porcelain-950 transition-colors duration-300 w-fit focus:outline-none focus:ring-1 focus:ring-black/20 rounded-xs"
-                    aria-label={`Visit Mohammed's ${social.label}`}
+                    className="group inline-flex items-center gap-2 text-xs sm:text-lg font-mono text-subtle hover:text-onyx transition-colors duration-300 w-fit"
                   >
-                    <IconComponent className="w-3.5 h-3.5 text-subtle group-hover:text-porcelain-950 transition-colors duration-300" />
+                    <IconComponent className="w-3.5 h-3.5 transition-colors duration-300" />
                     <span className="transition-transform duration-300 group-hover:translate-x-0.5">
                       {social.label}
                     </span>
-                    <ArrowUpRight
-                      size={12}
-                      className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 text-porcelain-950"
-                    />
+                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
                   </a>
                 );
               })}
             </div>
           </motion.div>
-
         </motion.div>
 
-        {/* --- LAYER 2 & 3: DEVELOPER EASTER EGG DINOSAUR RUNNER GAME --- */}
+        {/* EASTER EGG */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -201,46 +167,36 @@ export default function Footer() {
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
           className="my-8 w-full flex flex-col items-center gap-4"
         >
-          {/* Easter Egg Section Label */}
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-porcelain-950" />
+            <span className="w-1.5 h-1.5 rounded-full bg-onyx transition-colors duration-700" />
             <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle uppercase">
               Need a break?
             </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-porcelain-950" />
+            <span className="w-1.5 h-1.5 rounded-full bg-onyx transition-colors duration-700" />
           </div>
-
-          {/* Embedded Playable Dino Runner Game */}
           <DinoGame />
         </motion.div>
 
-        {/* --- LAYER 4: BOTTOM METADATA BAR --- */}
-        <div className="border-t border-black/8 pt-8 pb-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-subtle">
+        {/* BOTTOM BAR */}
+        <div className="border-t border-border-subtle pt-8 pb-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-subtle">
           <div className="flex items-center gap-2">
             <span>© 2026 Mohammed Jambughoda</span>
             <span>•</span>
             <span>Full-Stack Developer</span>
           </div>
-
-          <div className="text-onyx hidden sm:block">
+          <div className="text-onyx/80 hidden sm:block">
             Built to be useful. Designed to be remembered.
           </div>
-
           <button
             onClick={scrollToTop}
-            className="group flex items-center gap-2 text-subtle hover:text-porcelain-950 transition-colors duration-300 focus:outline-none rounded-sm cursor-pointer"
-            aria-label="Back to top of page"
+            className="group flex items-center gap-2 text-subtle hover:text-onyx transition-colors duration-300 focus:outline-none cursor-pointer"
           >
-            <span className="tracking-wider uppercase font-medium">Back to top</span>
-            <div className="p-1 rounded-full bg-black/5 group-hover:bg-black/10 transition-colors duration-300">
-              <ArrowUp
-                size={13}
-                className="transition-transform duration-300 group-hover:-translate-y-0.5 text-porcelain-950"
-              />
+            <span className="tracking-wider uppercase font-medium hover:underline">Back to top</span>
+            <div className="p-1 rounded-full bg-onyx/5 group-hover:bg-onyx/10 transition-colors duration-300">
+              <ArrowUp size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
             </div>
           </button>
         </div>
-
       </div>
     </footer>
   );

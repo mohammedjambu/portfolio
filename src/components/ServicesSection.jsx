@@ -53,27 +53,27 @@ export default function ServicesSection() {
   });
 
   return (
-    <section id="services" ref={containerRef} className="relative bg-porcelain-100 h-[400vh]">
+    <section id="services" ref={containerRef} className="relative bg-porcelain h-[400vh] transition-colors duration-700">
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden py-8 sm:py-12">
         
-        {/* --- UPDATED TAGLINE --- */}
+        {/* --- TAGLINE --- */}
         <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full mb-8 sm:mb-12 mt-8">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="flex items-end justify-between border-b border-black/5 pb-6"
+            className="flex items-end justify-between border-b border-border-subtle pb-6"
           >
             <div>
-               <span className="text-[10px] font-mono font-bold tracking-[0.4em] text-zinc-500 uppercase block mb-2">
+               <span className="text-[12px] font-mono font-bold tracking-[0.4em] text-subtle uppercase block mb-2">
                  Capabilities
                </span>
-               <h2 className="text-4xl md:text-6xl font-display font-medium tracking-tight text-porcelain-950">
+               <h2 className="text-4xl md:text-6xl font-display font-medium tracking-tight text-onyx">
                  THE <span className="font-serif italic font-normal text-accent transition-colors duration-500">Build.</span>
                </h2>
             </div>
-            <p className="max-w-70 text-[10px] font-medium text-zinc-600 uppercase tracking-widest leading-relaxed">
-              FROM FIRST IMPRESSION TO BACKEND LOGIC — I BUILD THE DIGITAL SYSTEMS BEHIND GOOD IDEAS.
+            <p className="max-w-80 text-xs sm:text-base font-mono text-zinc uppercase tracking-wide hidden lg:block">
+               FROM FIRST IMPRESSION TO BACKEND LOGIC — I BUILD THE DIGITAL SYSTEMS BEHIND GOOD IDEAS.
             </p>
           </motion.div>
         </div>
@@ -83,19 +83,16 @@ export default function ServicesSection() {
           
           {/* LEFT: POSTER TRANSITION */}
           <div className="lg:col-span-5 flex flex-col justify-center gap-4 sm:gap-6">
-            <div className="relative w-full max-w-[320px] max-h-[45vh] aspect-4/5 rounded-4xl overflow-hidden shadow-xl bg-white border border-black/5 p-1.5 mx-auto lg:mx-0">
+            <div className="relative w-full max-w-[320px] max-h-[45vh] aspect-4/5 rounded-4xl overflow-hidden shadow-xl bg-surface border border-border-subtle p-1.5 mx-auto lg:mx-0 transition-colors duration-700">
               
-              <div className="relative w-full h-full rounded-[1.6rem] overflow-hidden bg-porcelain-300">
+              <div className="relative w-full h-full rounded-[1.6rem] overflow-hidden bg-onyx/5">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div
                     key={activeIndex}
                     initial={{ y: "100%" }}
                     animate={{ y: 0 }}
                     exit={{ y: "-100%" }}
-                    transition={{ 
-                      duration: 0.7, 
-                      ease: [0.22, 1, 0.36, 1] 
-                    }}
+                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute inset-0 w-full h-full"
                   >
                     <img
@@ -108,8 +105,7 @@ export default function ServicesSection() {
               </div>
             </div>
 
-            {/* DESCRIPTION: Premium Two-Tone Copy */}
-            <div className="max-w-[320px] mx-auto lg:mx-0">
+            <div className="max-w-[320px] mx-auto lg:mx-0 min-h-15">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={activeIndex}
@@ -117,12 +113,12 @@ export default function ServicesSection() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 10 }}
                   transition={{ duration: 0.4 }}
-                  className="text-xs sm:text-sm md:text-base leading-tight sm:leading-snug text-porcelain-950"
+                  className="text-xs sm:text-sm md:text-base leading-tight sm:leading-snug text-onyx"
                 >
                   <span className="font-bold">
                     {SERVICES_DATA[activeIndex].description.split(',')[0]},
                   </span>
-                  <span className="text-zinc-600 font-medium ml-1">
+                  <span className="text-onyx/70 font-medium ml-1">
                     {SERVICES_DATA[activeIndex].description.split(',').slice(1).join(',')}
                   </span>
                 </motion.p>
@@ -143,23 +139,23 @@ export default function ServicesSection() {
                     {isActive && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 bg-porcelain-950 dark:bg-white rounded-2xl sm:rounded-3xl z-0 shadow-xl transition-colors duration-500"
+                        className="absolute inset-0 bg-onyx rounded-2xl sm:rounded-3xl z-0 shadow-xl transition-colors duration-700"
                         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                       />
                     )}
 
                     <div className="relative z-10 flex items-center justify-between">
                       <div className="flex items-center gap-6 sm:gap-12">
-                        <span className={`font-mono text-[10px] sm:text-xs font-bold transition-colors duration-500 ${isActive ? 'text-zinc-300 dark:text-zinc-600' : 'text-zinc-500'}`}>
+                        <span className={`font-mono text-[10px] sm:text-xs font-bold transition-colors duration-500 ${isActive ? 'text-porcelain/50' : 'text-subtle'}`}>
                           ({service.id})
                         </span>
-                        <h3 className={`text-lg sm:text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500 ${isActive ? 'text-white dark:text-black' : 'text-onyx'}`}>
+                        <h3 className={`text-lg sm:text-xl md:text-2xl font-bold tracking-tight transition-colors duration-500 ${isActive ? 'text-porcelain' : 'text-onyx'}`}>
                           {service.title}
                         </h3>
                       </div>
                       <motion.div
                         animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : -10 }}
-                        className="text-white dark:text-black transition-colors duration-500"
+                        className="text-porcelain transition-colors duration-500"
                       >
                         <ArrowRight size={18} />
                       </motion.div>

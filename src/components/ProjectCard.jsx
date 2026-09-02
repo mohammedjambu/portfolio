@@ -16,8 +16,8 @@ import {
   Compass,
   ExternalLink,
 } from "lucide-react";
-import OriginButtonPro from "./Extras/OriginButtonPro";
 import MotionButton from "./Extras/MotionButton";
+
 
 function GithubIcon({ className = "w-4 h-4" }) {
   return (
@@ -433,18 +433,18 @@ export default function ProjectCard({ project, isActive }) {
             className="flex items-center gap-4 flex-wrap"
           >
             {project.liveUrl ? (
-              <OriginButtonPro
+              <MotionButton
                 href={project.liveUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                variant="dark"
-                glowColor="rgba(37, 99, 235, 0.45)"
+                variant="primary"
+                size="sm"
+                icon={<ArrowUpRight className="w-3.5 h-3.5" />}
               >
-                <span>Live Demo</span>
-                <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </OriginButtonPro>
+                Live Demo
+              </MotionButton>
             ) : (
-              <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-black/5 text-black/40 text-xs font-bold uppercase tracking-wider cursor-not-allowed">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 text-black/40 text-xs font-bold uppercase tracking-wider cursor-not-allowed">
                 <span>Internal Build</span>
               </span>
             )}
@@ -455,16 +455,18 @@ export default function ProjectCard({ project, isActive }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="secondary"
+                size="sm"
+                icon={<ArrowUpRight className="w-3.5 h-3.5" />}
               >
                 <GithubIcon className="w-4 h-4" />
                 <span>Source / GitHub</span>
-                <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </MotionButton>
             ) : (
-              <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-black/5 text-black/40 text-xs font-bold uppercase tracking-wider cursor-not-allowed">
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 text-onyx text-xs font-bold uppercase tracking-wider cursor-not-allowed">
                 <span>Internal Build</span>
               </span>
             )}
+
           </motion.div>
         </div>
       </div>

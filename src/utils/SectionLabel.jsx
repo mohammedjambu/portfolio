@@ -8,10 +8,10 @@ export default function SectionLabel({ number = "01", title = "ABOUT ME", classN
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className={`inline-flex items-center gap-3 text-xs tracking-[0.2em] font-semibold text-subtle uppercase ${className}`}
+      className={`inline-flex items-center gap-3 text-[10px] tracking-[0.3em] font-bold text-subtle uppercase transition-colors duration-700 ${className}`}
     >
-      <span className="text-[#111113] font-mono">{number}</span>
-      <span className="w-6 h-px bg-[#111113]/20"></span>
+      <span className="text-onyx font-mono">{number}</span>
+      <span className="w-8 h-px bg-onyx/20"></span>
       <span>{title}</span>
     </motion.div>
   );
