@@ -202,7 +202,7 @@ I'd like to inquire about a project:
 💬 *Project Details*:
 ${formData.message.trim()}`;
 
-    const whatsappUrl = `https://wa.me/919157302004?text=${encodeURIComponent(formattedMessage)}`;
+    const whatsappUrl = `https://wa.me/919106310886?text=${encodeURIComponent(formattedMessage)}`;
 
     setIsSubmitted(true);
     window.open(whatsappUrl, '_blank');
@@ -251,7 +251,7 @@ ${formData.message.trim()}`;
 
             {/* PREMIUM ATTRACTIVE BOOK A CALL CARD */}
             <motion.a
-              href="https://wa.me/919157302004?text=Hi%20Mohammed,%20I'd%20like%20to%20book%20a%2015-minute%20free%20introductory%20call."
+              href="https://wa.me/919106310886?text=Hi%20Mohammed,%20I'd%20like%20to%20book%20a%2015-minute%20free%20introductory%20call."
               target="_blank"
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02, y: -2 }}
@@ -302,7 +302,7 @@ ${formData.message.trim()}`;
               <FormField
                 label="Your Name"
                 name="name"
-                placeholder="Mohammed Jambu"
+                placeholder="John Doe"
                 value={formData.name}
                 onChange={handleChange}
                 onBlur={handleBlur}

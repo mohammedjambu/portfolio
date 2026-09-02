@@ -34,18 +34,17 @@ const MailIcon = ({ className = "w-3.5 h-3.5" }) => (
 );
 
 const SOCIAL_LINKS = [
-  { label: 'Email', href: 'mailto:mohammedjambughoda52@gmail.com', icon: MailIcon },
   { label: 'GitHub', href: 'https://github.com/mohammedjambu', icon: GithubIcon },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/mohammed-jambughoda', icon: LinkedinIcon },
+  { label: 'LinkedIn', href: 'https://linkedin.com', icon: LinkedinIcon },
   { label: 'Instagram', href: 'https://instagram.com', icon: InstagramIcon },
+  { label: 'Email', href: 'mailto:mohammedjambughoda12@gmail.com', icon: MailIcon },
 ];
 
 const NAV_LINKS = [
   { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
-  { label: 'Projects', href: '#projects' },
   { label: 'Tech Stack', href: '#tech' },
-  { label: 'FAQs', href: '#faq' },
+  { label: 'Projects', href: '#projects' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -122,8 +121,9 @@ export default function Footer() {
                   onClick={(e) => handleNavClick(e, link.href)}
                   className="group flex items-center justify-between py-0.5 text-md font-medium text-subtle hover:text-onyx transition-colors duration-300 w-fit"
                 >
-                  <span className="transition-transform duration-300 group-hover:translate-x-1.5">
+                  <span className="relative transition-transform duration-300 group-hover:translate-x-1.5 pb-0.5">
                     {link.label}
+                    <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                   </span>
                   <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ml-2" />
                 </a>
@@ -148,8 +148,9 @@ export default function Footer() {
                     className="group inline-flex items-center gap-2 text-xs sm:text-lg font-mono text-subtle hover:text-onyx transition-colors duration-300 w-fit"
                   >
                     <IconComponent className="w-3.5 h-3.5 transition-colors duration-300" />
-                    <span className="transition-transform duration-300 group-hover:translate-x-0.5">
+                    <span className="relative transition-transform duration-300 group-hover:translate-x-0.5 pb-0.5">
                       {social.label}
+                      <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                     </span>
                     <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
                   </a>
@@ -189,12 +190,13 @@ export default function Footer() {
           </div>
           <button
             onClick={scrollToTop}
-            className="group flex items-center gap-2 text-subtle hover:text-onyx transition-colors duration-300 focus:outline-none cursor-pointer"
+            className="group inline-flex items-center gap-2 text-xs font-mono font-medium uppercase tracking-wider text-subtle hover:text-onyx transition-colors duration-300 cursor-pointer"
           >
-            <span className="tracking-wider uppercase font-medium hover:underline">Back to top</span>
-            <div className="p-1 rounded-full bg-onyx/5 group-hover:bg-onyx/10 transition-colors duration-300">
-              <ArrowUp size={13} className="transition-transform duration-300 group-hover:-translate-y-0.5" />
-            </div>
+            <span className="relative pb-0.5">
+              Back to top
+              <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+            </span>
+            <ArrowUp size={13} className="shrink-0 transition-transform duration-300 group-hover:-translate-y-0.5" />
           </button>
         </div>
       </div>
