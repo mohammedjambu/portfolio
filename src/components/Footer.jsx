@@ -4,6 +4,8 @@ import { ArrowUp, ArrowRight, ArrowUpRight } from 'lucide-react';
 import DinoGame from './DinoGame';
 import { scrollToSection } from '../utils/scrollToSection';
 
+import Signature from '../utils/Signature';
+
 const GithubIcon = ({ className = "w-3.5 h-3.5" }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
@@ -90,12 +92,12 @@ export default function Footer() {
           {/* BRAND */}
           <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-onyx text-porcelain border border-border-subtle flex items-center justify-center text-[14px] font-mono font-bold tracking-wider transition-colors duration-700">
+              <div className="w-8 h-8 rounded-full bg-onyx text-porcelain border border-border-subtle flex items-center justify-center text-[14px] font-mono font-bold tracking-wider transition-colors duration-700 shrink-0">
                 MJ
               </div>
-              <span className="font-display text-xl sm:text-2xl font-bold tracking-tight uppercase">
-                MOHAMMED JAMBUGHODA
-              </span>
+              <div className="w-full max-w-[320px] sm:max-w-105 text-onyx">
+                <Signature />
+              </div>
             </div>
             <span className="font-mono text-sm text-subtle tracking-widest uppercase pl-0.5">
               Full-Stack Developer
