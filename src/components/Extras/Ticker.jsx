@@ -41,8 +41,8 @@ export default function Ticker() {
       </motion.div>
 
       {/* Fade masks: Using var(--porcelain) ensures the fade matches the current theme background */}
-      <div className="absolute top-0 bottom-0 left-0 w-24 bg-linear-to-r from-porcelain to-transparent pointer-events-none z-10 transition-colors duration-700"></div>
-      <div className="absolute top-0 bottom-0 right-0 w-24 bg-linear-to-l from-porcelain to-transparent pointer-events-none z-10 transition-colors duration-700"></div>
+      <div className="absolute top-0 bottom-0 left-0 w-12 sm:w-16 md:w-24 bg-linear-to-r from-porcelain to-transparent pointer-events-none z-10 transition-colors duration-700"></div>
+      <div className="absolute top-0 bottom-0 right-0 w-12 sm:w-16 md:w-24 bg-linear-to-l from-porcelain to-transparent pointer-events-none z-10 transition-colors duration-700"></div>
     </div>
   );
 }

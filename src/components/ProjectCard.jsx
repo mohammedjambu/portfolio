@@ -18,7 +18,6 @@ import {
 } from "lucide-react";
 import MotionButton from "./Extras/MotionButton";
 
-
 function GithubIcon({ className = "w-4 h-4" }) {
   return (
     <svg
@@ -51,118 +50,103 @@ function ProjectVisualPreview({ project }) {
   }
 
   return (
-    <div className="relative w-full h-full bg-[#0F1012] text-white p-5 sm:p-7 md:p-8 flex flex-col justify-between overflow-hidden select-none">
-      {/* Editorial Browser / Canvas Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-3 z-10">
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
-          <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F]" />
+    <div className="relative w-full h-full bg-[#0F1012] text-white p-3.5 sm:p-5 md:p-6 lg:p-7 flex flex-col justify-between overflow-hidden select-none">
+      {/* Editorial Browser Header */}
+      <div className="flex items-center justify-between border-b border-white/10 pb-2 sm:pb-2.5 z-10 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FF5F56]" />
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFBD2E]" />
+          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#27C93F]" />
         </div>
-        <div className="bg-white/10 text-white/80 text-[10px] sm:text-xs font-mono px-3 py-1 rounded-full flex items-center gap-1.5 max-w-50 sm:max-w-70 truncate border border-white/10">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        <div className="bg-white/10 text-white/80 text-[9px] sm:text-[11px] font-mono px-2.5 py-0.5 sm:py-1 rounded-full flex items-center gap-1.5 max-w-[160px] sm:max-w-[240px] truncate border border-white/10">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
           <span className="truncate">
             {project.liveUrl || project.githubUrl || "https://project.demo"}
           </span>
         </div>
-        <div className="text-white/40 text-[10px] font-mono uppercase tracking-widest hidden sm:block">
+        <div className="text-white/40 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest hidden sm:block">
           {project.number} / 05
         </div>
       </div>
 
-      {/* Dynamic Visual Mockup Centerpiece */}
-      <div className="relative my-auto py-4 flex flex-col items-center justify-center">
-        {/* Abstract Background Ambient Glow Orbs */}
+      {/* Dynamic Visual Centerpiece */}
+      <div className="relative my-auto py-2 sm:py-3 flex flex-col items-center justify-center grow">
         <div
-          className={`absolute -top-12 -left-12 w-64 h-64 rounded-full blur-3xl opacity-20 bg-linear-to-br ${project.themeGlow || "from-blue-500 to-indigo-500"}`}
+          className={`absolute -top-10 -left-10 w-48 h-48 sm:w-60 sm:h-60 rounded-full blur-3xl opacity-25 bg-gradient-to-br ${project.themeGlow || "from-blue-500 to-indigo-500"}`}
         />
         <div
-          className={`absolute -bottom-12 -right-12 w-64 h-64 rounded-full blur-3xl opacity-20 bg-linear-to-br ${project.themeGlow || "from-indigo-500 to-purple-500"}`}
+          className={`absolute -bottom-10 -right-10 w-48 h-48 sm:w-60 sm:h-60 rounded-full blur-3xl opacity-25 bg-gradient-to-br ${project.themeGlow || "from-indigo-500 to-purple-500"}`}
         />
 
         {project.id === "solartile" && (
-          <div className="w-full max-w-sm sm:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-2xl relative z-10 transform transition-transform duration-500 group-hover:scale-[1.02]">
-            <div className="flex items-center justify-between mb-4">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
+            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
-                  <Sun className="w-4 h-4 text-amber-400" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+                  <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
                 </div>
                 <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block">
+                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
                     SOLARTILE
                   </span>
-                  <span className="text-[9px] text-white/50 block font-mono">
+                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
                     Solar Energy Platform
                   </span>
                 </div>
               </div>
-              <span className="text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
+              <span className="text-[8px] sm:text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
                 Clean Energy
               </span>
             </div>
-            <div className="space-y-2.5">
-              <div className="bg-white/5 p-3 rounded-xl border border-white/10 flex items-center justify-between">
+            <div className="space-y-2">
+              <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-semibold text-white/95">
+                  <div className="text-[11px] sm:text-xs font-semibold text-white/95">
                     Solar Generation Insights
                   </div>
-                  <div className="text-[10px] text-white/50 font-mono mt-0.5">
+                  <div className="text-[9px] sm:text-[10px] text-white/50 font-mono mt-0.5">
                     Optimal Output · 14.8 kWh / day
                   </div>
                 </div>
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-              </div>
-              <div className="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-between opacity-70">
-                <div>
-                  <div className="text-xs font-medium text-white/80">
-                    Estimated Carbon Offset
-                  </div>
-                  <div className="text-[10px] text-white/40 font-mono mt-0.5">
-                    3.2 Tons CO2 reduced
-                  </div>
-                </div>
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
               </div>
             </div>
           </div>
         )}
 
         {project.id === "wanderlust" && (
-          <div className="w-full max-w-sm sm:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-2xl relative z-10 transform transition-transform duration-500 group-hover:scale-[1.02]">
-            <div className="flex items-center justify-between mb-4">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
+            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-                  <Compass className="w-4 h-4 text-emerald-400" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
+                  <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
                 </div>
                 <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block">
+                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
                     WANDERLUST
                   </span>
-                  <span className="text-[9px] text-white/50 block font-mono">
+                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
                     Travel & Rental Platform
                   </span>
                 </div>
               </div>
-              <span className="text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+              <span className="text-[8px] sm:text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
                 Interactive Map
               </span>
             </div>
-            <div className="space-y-3">
-              <div className="h-28 sm:h-32 rounded-xl bg-linear-to-br from-emerald-950/60 via-zinc-900 to-black border border-white/10 p-3.5 flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] bg-size-[12px_12px] opacity-15" />
+            <div className="space-y-2">
+              <div className="h-20 sm:h-24 md:h-28 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-950/60 via-zinc-900 to-black border border-white/10 p-2.5 sm:p-3 flex flex-col justify-between relative overflow-hidden">
                 <div className="flex justify-between items-start relative z-10">
-                  <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium bg-black/60 px-2.5 py-1 rounded-full border border-white/10">
-                    <MapPin className="w-3.5 h-3.5" /> Kyoto, Japan
+                  <div className="flex items-center gap-1 text-[10px] sm:text-xs text-emerald-400 font-medium bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
+                    <MapPin className="w-3 h-3" /> Kyoto, Japan
                   </div>
-                  <span className="text-[10px] bg-emerald-500/20 border border-emerald-500/30 px-2 py-0.5 rounded text-emerald-200 font-mono font-bold">
+                  <span className="text-[9px] sm:text-[10px] bg-emerald-500/20 border border-emerald-500/30 px-1.5 py-0.5 rounded text-emerald-200 font-mono font-bold">
                     $180 / night
                   </span>
                 </div>
                 <div className="relative z-10">
-                  <div className="text-xs sm:text-sm font-semibold text-white/95">
+                  <div className="text-[11px] sm:text-xs md:text-sm font-semibold text-white/95 truncate">
                     Modern Zen Temple Loft & Private Garden
-                  </div>
-                  <div className="text-[10px] text-white/60 font-mono mt-0.5">
-                    ★ 4.98 (124 reviews)
                   </div>
                 </div>
               </div>
@@ -171,130 +155,111 @@ function ProjectVisualPreview({ project }) {
         )}
 
         {project.id === "restuara" && (
-          <div className="w-full max-w-sm sm:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-2xl relative z-10 transform transition-transform duration-500 group-hover:scale-[1.02]">
-            <div className="flex items-center justify-between mb-4">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
+            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center">
-                  <Utensils className="w-4 h-4 text-rose-400" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center shrink-0">
+                  <Utensils className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400" />
                 </div>
                 <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block">
+                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
                     RESTUARA
                   </span>
-                  <span className="text-[9px] text-white/50 block font-mono">
-                    Cinematic Dining Experience
+                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
+                    Cinematic Dining
                   </span>
                 </div>
               </div>
-              <span className="text-[9px] font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full">
+              <span className="text-[8px] sm:text-[9px] font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full">
                 Atmosphere Web
               </span>
             </div>
-            <div className="bg-white/5 p-3.5 rounded-xl border border-white/10 space-y-2.5">
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-white/90 font-medium">
+            <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] sm:text-xs">
+                <span className="text-white/90 font-medium truncate">
                   Chef's Tasting Reservation
                 </span>
-                <span className="text-rose-300 font-mono text-[10px] bg-rose-400/20 border border-rose-400/30 px-2 py-0.5 rounded-full">
+                <span className="text-rose-300 font-mono text-[9px] bg-rose-400/20 border border-rose-400/30 px-2 py-0.5 rounded-full shrink-0 ml-2">
                   Confirmed
                 </span>
-              </div>
-              <div className="text-[11px] text-white/60 font-serif italic">
-                "An immersive visual atmosphere before your first reservation."
               </div>
             </div>
           </div>
         )}
 
         {project.id === "green-cart-logistics" && (
-          <div className="w-full max-w-sm sm:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-2xl relative z-10 transform transition-transform duration-500 group-hover:scale-[1.02]">
-            <div className="flex items-center justify-between mb-4">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
+            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-teal-500/20 border border-teal-500/30 flex items-center justify-center">
-                  <Truck className="w-4 h-4 text-teal-400" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-teal-500/20 border border-teal-500/30 flex items-center justify-center shrink-0">
+                  <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-400" />
                 </div>
                 <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block">
-                    GREENCART LOGISTICS
+                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
+                    GREENCART
                   </span>
-                  <span className="text-[9px] text-white/50 block font-mono">
-                    Logistics Dispatch Center
+                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
+                    Logistics Dispatch
                   </span>
                 </div>
               </div>
-              <span className="text-[9px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 rounded-full">
+              <span className="text-[8px] sm:text-[9px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 rounded-full">
                 Real-Time GPS
               </span>
             </div>
-            <div className="bg-white/5 p-3.5 rounded-xl border border-white/10 space-y-2.5">
-              <div className="flex justify-between items-center text-xs">
-                <span className="text-white/70 font-mono">
-                  Shipment #GC-88402
-                </span>
-                <span className="text-teal-300 font-mono text-[10px] bg-teal-400/20 border border-teal-400/30 px-2 py-0.5 rounded-full">
+            <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 space-y-2">
+              <div className="flex justify-between items-center text-[10px] sm:text-xs">
+                <span className="text-white/70 font-mono">Shipment #GC-88402</span>
+                <span className="text-teal-300 font-mono text-[9px] bg-teal-400/20 border border-teal-400/30 px-2 py-0.5 rounded-full">
                   In Transit
                 </span>
               </div>
-              <div className="w-full bg-white/10 h-2 rounded-full overflow-hidden">
-                <div className="bg-teal-400 h-full w-3/4 transition-all duration-1000" />
-              </div>
-              <div className="flex justify-between text-[10px] text-white/50 font-mono pt-1">
-                <span>ETA: 14 mins</span>
-                <span>Speed: 48 km/h</span>
+              <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                <div className="bg-teal-400 h-full w-3/4" />
               </div>
             </div>
           </div>
         )}
 
         {project.id === "blog-platform" && (
-          <div className="w-full max-w-sm sm:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 shadow-2xl relative z-10 transform transition-transform duration-500 group-hover:scale-[1.02]">
-            <div className="flex items-center justify-between mb-4">
+          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
+            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
-                  <BookOpen className="w-4 h-4 text-amber-400" />
+                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
+                  <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
                 </div>
                 <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block">
+                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
                     BLOG PLATFORM
                   </span>
-                  <span className="text-[9px] text-white/50 block font-mono">
-                    Content Management Studio
+                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
+                    Content Studio
                   </span>
                 </div>
               </div>
-              <span className="text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
+              <span className="text-[8px] sm:text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
                 MERN Stack
               </span>
             </div>
-            <div className="space-y-2.5">
-              <div className="bg-white/5 p-3 rounded-xl border border-white/10 flex items-center justify-between">
+            <div className="space-y-2">
+              <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 flex items-center justify-between">
                 <div>
-                  <div className="text-xs font-semibold text-white/95">
+                  <div className="text-[11px] sm:text-xs font-semibold text-white/95">
                     Engineering Editorial Workflows
                   </div>
-                  <div className="text-[10px] text-white/50 font-mono mt-0.5">
+                  <div className="text-[9px] sm:text-[10px] text-white/50 font-mono mt-0.5">
                     Draft saved · 1,420 words
                   </div>
                 </div>
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-              </div>
-              <div className="bg-white/5 p-3 rounded-xl border border-white/5 flex items-center justify-between opacity-70">
-                <div>
-                  <div className="text-xs font-medium text-white/80">
-                    Component Architecture in React
-                  </div>
-                  <div className="text-[10px] text-white/40 font-mono mt-0.5">
-                    Published · 3.2k reads
-                  </div>
-                </div>
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Editorial Card Visual Footer */}
-      <div className="flex items-center justify-between text-[10px] sm:text-[11px] text-white/50 font-mono z-10 pt-2.5 border-t border-white/10">
+      {/* Visual Footer */}
+      <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-white/50 font-mono z-10 pt-1.5 sm:pt-2 border-t border-white/10 shrink-0">
         <span className="tracking-widest uppercase">{project.category}</span>
         <span className="text-white/80 flex items-center gap-1 font-medium group-hover:text-white transition-colors">
           Explore Showcase <ExternalLink className="w-3 h-3" />
@@ -308,15 +273,12 @@ export default function ProjectCard({ project, isActive }) {
   const [isHovered, setIsHovered] = useState(false);
   const visualRef = useRef(null);
 
-  // Mouse position values relative to visual container
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Perspective 3D Tilt calculation
-  const rotateX = useTransform(mouseY, [-200, 200], [4, -4]);
-  const rotateY = useTransform(mouseX, [-300, 300], [-5, 5]);
+  const rotateX = useTransform(mouseY, [-180, 180], [4, -4]);
+  const rotateY = useTransform(mouseX, [-250, 250], [-4, 4]);
 
-  // Smooth spring physics for magnetic circular cursor
   const springConfig = { stiffness: 300, damping: 28, mass: 0.4 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
@@ -350,87 +312,86 @@ export default function ProjectCard({ project, isActive }) {
 
   return (
     <div
-      className={`relative w-full h-full flex flex-col lg:grid lg:grid-cols-12 gap-6 md:gap-10 lg:gap-14 items-center select-none transition-all duration-700 ${
+      className={`relative w-full h-full flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-10 xl:gap-14 items-center select-none transition-all duration-700 ${
         isActive
           ? "opacity-100 scale-100"
-          : "opacity-45 scale-[0.94] pointer-events-none"
+          : "opacity-35 scale-[0.96] blur-[1px] pointer-events-none"
       }`}
     >
-      {/* LEFT COLUMN: EDITORIAL PROJECT INFORMATION (~40% width) */}
-      <div className="lg:col-span-5 flex flex-col h-full py-1 sm:py-2">
-        {/* Top: Chapter Number, Category & Display Title */}
-        <div className="space-y-4 sm:space-y-4">
+      {/* LEFT COLUMN: EDITORIAL METADATA & CONTENT */}
+      <div className="w-full lg:col-span-5 flex flex-col justify-between h-auto lg:h-full py-1 sm:py-2 order-1 lg:order-1">
+        {/* Top: Chapter, Category, Title, Tagline */}
+        <div className="space-y-1.5 sm:space-y-2 lg:space-y-3">
           <motion.div
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 10 }}
+            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-3"
+            className="flex items-center gap-2 sm:gap-3"
           >
-            <span className="font-mono text-sm sm:text-base font-bold text-porcelain-950">
+            <span className="font-mono text-xs sm:text-sm lg:text-base font-bold text-onyx">
               {project.number}
             </span>
-            <span className="w-8 h-px bg-black/20" />
-            <span className="text-[10px] sm:text-xs font-semibold tracking-[0.2em] text-subtle uppercase">
+            <span className="w-6 sm:w-8 h-px bg-onyx/20" />
+            <span className="text-[9px] sm:text-[10px] lg:text-xs font-semibold tracking-[0.2em] text-subtle uppercase">
               {project.category}
             </span>
           </motion.div>
 
           <motion.h3
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.5, y: isActive ? 0 : 15 }}
+            animate={{ opacity: isActive ? 1 : 0.5, y: isActive ? 0 : 10 }}
             transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-base uppercase tracking-tight text-porcelain-950 leading-none"
+            className="text-[clamp(1.5rem,3.2vw,3.25rem)] font-display font-medium uppercase tracking-tight text-onyx leading-[1.05]"
           >
             {project.title}
           </motion.h3>
 
-          {/* Storytelling Tagline */}
           <motion.p
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 15 }}
+            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 10 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif italic text-lg sm:text-xl md:text-2xl text-porcelain-800 leading-snug py-3"
+            className="font-serif italic text-sm sm:text-base lg:text-xl text-onyx/80 leading-snug py-0.5 sm:py-1"
           >
             "{project.tagline}"
           </motion.p>
         </div>
 
-        {/* Middle/Bottom: Description, Technologies & Action Buttons */}
-        <div className="space-y-8 pt-4 sm:pt-6 border-t border-black/10 mt-4 lg:mt-0">
+        {/* Mobile Spacer (re-orders on mobile below visual) */}
+        <div className="hidden lg:flex flex-col space-y-4 lg:space-y-6 pt-4 border-t border-border-subtle mt-4 lg:mt-auto">
           <motion.p
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 12 }}
+            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 10 }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-xs sm:text-sm text-subtle leading-relaxed line-clamp-3"
+            className="text-xs sm:text-sm text-subtle leading-relaxed line-clamp-3 max-w-md"
           >
             {project.description}
           </motion.p>
 
-          {/* Technology Tags */}
+          {/* Tech Tags */}
           <motion.div
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 10 }}
+            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs font-mono font-medium text-porcelain-700"
+            className="flex flex-wrap items-center gap-1.5 lg:gap-2 text-[10px] sm:text-xs font-mono font-medium text-subtle"
           >
             {project.technologies.map((tech, idx) => (
               <React.Fragment key={idx}>
-                <span className="bg-black/3 border border-black/5 px-2.5 py-1 rounded-md text-[11px]">
+                <span className="bg-onyx/5 border border-border-subtle px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[10px] sm:text-[11px] transition-colors duration-700">
                   {tech}
                 </span>
                 {idx < project.technologies.length - 1 && (
-                  <span className="text-black/20 hidden sm:inline">•</span>
+                  <span className="text-onyx/20 hidden sm:inline">•</span>
                 )}
               </React.Fragment>
             ))}
           </motion.div>
 
-          {/* Action Links: Live Demo (OriginButtonPro) & GitHub (MotionButton) */}
+          {/* Action Links */}
           <motion.div
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 10 }}
+            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-4 flex-wrap"
+            className="flex items-center gap-3 sm:gap-4 flex-wrap pt-1"
           >
             {project.liveUrl ? (
               <MotionButton
@@ -438,14 +399,15 @@ export default function ProjectCard({ project, isActive }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="primary"
-                size="sm"
+                size="xs"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 text-[11px] sm:text-xs"
                 icon={<ArrowUpRight className="w-3.5 h-3.5" />}
               >
                 Live Demo
               </MotionButton>
             ) : (
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 text-black/40 text-xs font-bold uppercase tracking-wider cursor-not-allowed">
-                <span>Internal Build</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-onyx/5 text-subtle text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-not-allowed">
+                Internal Build
               </span>
             )}
 
@@ -455,47 +417,47 @@ export default function ProjectCard({ project, isActive }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="secondary"
-                size="sm"
+                size="xs"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 text-[11px] sm:text-xs"
                 icon={<ArrowUpRight className="w-3.5 h-3.5" />}
               >
-                <GithubIcon className="w-4 h-4" />
-                <span>Source / GitHub</span>
+                <GithubIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Source</span>
               </MotionButton>
             ) : (
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-black/5 text-onyx text-xs font-bold uppercase tracking-wider cursor-not-allowed">
-                <span>Internal Build</span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-onyx/5 text-subtle text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-not-allowed">
+                Source Private
               </span>
             )}
-
           </motion.div>
         </div>
       </div>
 
-      {/* RIGHT COLUMN: EDITORIAL PROJECT VISUAL + 3D TILT + MAGNETIC CIRCULAR CURSOR (~60% width) */}
-      <div className="lg:col-span-7 w-full h-full flex items-center justify-center perspective-1000">
+      {/* RIGHT COLUMN: PROJECT VISUAL MOCKUP + 3D TILT */}
+      <div className="w-full lg:col-span-7 flex items-center justify-center perspective-[1000px] order-2 lg:order-2">
         <motion.div
           ref={visualRef}
           style={{
             rotateX: isHovered ? rotateX : 0,
             rotateY: isHovered ? rotateY : 0,
           }}
-          transition={{ type: "spring", stiffness: 400, damping: 30 }}
+          transition={{ type: "spring", stiffness: 380, damping: 28 }}
           onMouseMove={handleMouseMove}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onClick={handleVisualClick}
-          className="relative w-full aspect-16/10 max-h-95 sm:max-h-110 md:max-h-120 lg:max-h-130 rounded-2xl md:rounded-3xl overflow-hidden border border-black/10 shadow-2xl bg-[#0F1012] cursor-pointer group preserve-3d transition-shadow duration-500 hover:shadow-black/20"
+          className="relative w-full aspect-[16/10] max-w-[440px] sm:max-w-[540px] lg:max-w-none rounded-2xl md:rounded-3xl overflow-hidden border border-border-subtle shadow-xl lg:shadow-2xl bg-surface cursor-pointer group transition-all duration-700 hover:shadow-2xl"
         >
           <ProjectVisualPreview project={project} />
 
-          {/* CUSTOM MAGNETIC CIRCULAR "VIEW PROJECT" CURSOR (Appears on Hover over visual) */}
+          {/* Magnetic Cursor */}
           <AnimatePresence>
             {isHovered && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                   x: cursorX,
                   y: cursorY,
@@ -503,19 +465,67 @@ export default function ProjectCard({ project, isActive }) {
                   top: "50%",
                   transform: "translate(-50%, -50%)",
                 }}
-                className="hidden md:flex absolute pointer-events-none z-30 w-24 h-24 rounded-full bg-porcelain-950 text-white shadow-2xl border border-white/20 flex-col items-center justify-center text-center select-none shadow-black/60"
+                className="hidden lg:flex absolute pointer-events-none z-30 w-20 h-20 rounded-full bg-onyx text-porcelain shadow-2xl border border-border-subtle flex-col items-center justify-center text-center select-none"
               >
-                <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase leading-tight text-white/90">
+                <span className="font-sans text-[9px] font-bold tracking-[0.2em] uppercase leading-tight">
                   VIEW
                 </span>
-                <span className="font-sans text-[10px] font-bold tracking-[0.2em] uppercase leading-tight text-white/90">
-                  PROJECT
-                </span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-white mt-0.5" />
+                <ArrowUpRight className="w-3.5 h-3.5 mt-0.5 text-accent" />
               </motion.div>
             )}
           </AnimatePresence>
         </motion.div>
+      </div>
+
+      {/* MOBILE LOWER CONTENT (rendered only on small screens below visual) */}
+      <div className="w-full flex lg:hidden flex-col space-y-3 pt-2 mt-4 border-t border-border-subtle order-3">
+        <p className="text-xs text-subtle leading-relaxed line-clamp-2">
+          {project.description}
+        </p>
+
+        {/* Tech Tags */}
+        <div className="flex flex-wrap items-center gap-1.5 text-[10px] my-4 font-mono font-medium text-subtle">
+          {project.technologies.map((tech, idx) => (
+            <span
+              key={idx}
+              className="bg-onyx/5 border border-border-subtle px-2 py-0.5 rounded-md text-[10px]"
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2.5 flex-wrap pt-0.5">
+          {project.liveUrl && (
+            <MotionButton
+              href={project.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="primary"
+              size="xs"
+              className="px-3.5 py-1.5 text-[11px]"
+              icon={<ArrowUpRight className="w-3 h-3" />}
+            >
+              Live Demo
+            </MotionButton>
+          )}
+
+          {project.githubUrl && (
+            <MotionButton
+              href={project.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="secondary"
+              size="xs"
+              className="px-3.5 py-1.5 text-[11px]"
+              icon={<ArrowUpRight className="w-3 h-3" />}
+            >
+              <GithubIcon className="w-3 h-3" />
+              <span>Source</span>
+            </MotionButton>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -45,6 +45,7 @@ export default function MotionButton({
 
   // Size styles
   const sizeStyles = {
+    xs: 'px-3 py-1.5 text-[10px] rounded-full gap-1.5',
     sm: 'px-4 py-2.5 text-xs rounded-full gap-2',
     md: 'px-6 py-3 text-xs sm:text-sm rounded-4xl gap-2.5',
     lg: 'px-8 py-3.5 text-sm sm:text-base rounded-4xl gap-3',

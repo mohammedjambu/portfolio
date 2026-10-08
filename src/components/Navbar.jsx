@@ -72,11 +72,11 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-5 inset-x-0 mx-auto w-full max-w-[95vw] md:max-w-max z-50 flex justify-center pointer-events-none">
+    <header className="fixed top-5 inset-x-0 mx-auto w-full max-w-[calc(100vw-2rem)] lg:max-w-max z-50 flex justify-center pointer-events-none">
       <motion.nav
         layout
         transition={sharedTransition}
-        className={`pointer-events-auto relative flex items-center transition-colors duration-500 rounded-full border border-border-subtle p-1.5 ${
+        className={`pointer-events-auto relative flex items-center transition-colors duration-500 rounded-full border border-border-subtle p-1.5 max-w-full ${
           isScrolled
             ? "glass-island shadow-2xl shadow-black/10"
             : "bg-surface/90 backdrop-blur-xl shadow-sm"
@@ -109,7 +109,7 @@ export default function Navbar() {
                   onMouseEnter={() => setPillHovered(true)}
                   onMouseLeave={() => setPillHovered(false)}
                   onClick={(e) => handleNavClick(e, "#contact")}
-                  className="relative overflow-hidden cursor-pointer px-4 py-1.5 rounded-full bg-onyx/5 border border-border-subtle flex items-center justify-center min-w-56 h-8 select-none"
+                  className="relative overflow-hidden cursor-pointer px-4 py-1.5 rounded-full bg-onyx/5 border border-border-subtle flex items-center justify-center min-w-44 sm:min-w-56 max-w-full h-8 select-none"
                 >
                   <motion.div
                     animate={{ rotateX: pillHovered ? 180 : 0 }}
@@ -135,7 +135,7 @@ export default function Navbar() {
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={{ opacity: 0, y: 15, filter: "blur(5px)" }}
                 transition={sharedTransition}
-                className="hidden md:flex items-center"
+                className="hidden lg:flex items-center"
               >
                 {NAV_ITEMS.map((item) => {
                   const targetId = item.href.replace("#", "");
@@ -147,7 +147,7 @@ export default function Navbar() {
                       onClick={(e) => handleNavClick(e, item.href)}
                       onMouseEnter={() => setHoveredSection(targetId)}
                       onMouseLeave={() => setHoveredSection(null)}
-                      className={`relative px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 ${
+                      className={`relative px-2.5 lg:px-3 xl:px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 ${
                         isActive ? "text-onyx" : "text-subtle hover:text-onyx"
                       }`}
                     >
@@ -163,7 +163,7 @@ export default function Navbar() {
                       {isActive && (
                         <motion.div
                           layoutId="nav-active-underline"
-                          className="absolute bottom-0 left-4 right-4 h-0.5 bg-onyx rounded-full"
+                          className="absolute bottom-0 left-2.5 right-2.5 lg:left-3 lg:right-3 xl:left-4 xl:right-4 h-0.5 bg-onyx rounded-full"
                           transition={sharedTransition}
                         />
                       )}
@@ -178,7 +178,7 @@ export default function Navbar() {
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 text-onyx outline-none ml-2"
+            className="lg:hidden p-2 text-onyx outline-none ml-2"
           >
             {mobileOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
@@ -192,7 +192,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute top-16 inset-x-4 glass-island rounded-3xl p-4 pointer-events-auto md:hidden"
+            className="absolute top-16 left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-md glass-island rounded-3xl p-4 pointer-events-auto lg:hidden"
           >
             <div className="flex flex-col gap-1">
               {NAV_ITEMS.map((item, i) => (

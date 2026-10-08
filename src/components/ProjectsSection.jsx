@@ -5,7 +5,6 @@ import ProjectCard from './ProjectCard';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import MotionButton from './Extras/MotionButton';
 
-
 export const PROJECTS_DATA = [
   {
     id: 'solartile',
@@ -72,39 +71,36 @@ export const PROJECTS_DATA = [
 export default function ProjectsSection() {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const [maxTranslate, setMaxTranslate] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   const sectionRef = useRef(null);
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
 
-  // Responsive device check & prefers-reduced-motion listener
+  // Prefers-reduced-motion listener
   useEffect(() => {
-    const checkViewport = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkViewport();
-
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
 
-    const handleResize = () => {
-      checkViewport();
-      updateTrackMeasurement();
-    };
+    const handleMediaChange = (e) => setPrefersReducedMotion(e.matches);
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleMediaChange);
+    }
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      if (mediaQuery.removeEventListener) {
+        mediaQuery.removeEventListener('change', handleMediaChange);
+      }
+    };
   }, []);
 
-  // Isolated Scroll Progress tracking for Projects section
+  // Isolated Scroll Progress tracking
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   });
 
-  // Calculate dynamic horizontal translation distance based on rendered track scrollWidth
+  // Calculate dynamic horizontal translation distance
   const updateTrackMeasurement = () => {
     if (trackRef.current && viewportRef.current) {
       const trackWidth = trackRef.current.scrollWidth;
@@ -114,13 +110,16 @@ export default function ProjectsSection() {
     }
   };
 
-  // Dynamically calculate which project card is physically closest to the center of the viewport
+  // Center-detection for active project index
   const updateActiveIndexFromTrack = () => {
     if (!trackRef.current) return;
     const cards = trackRef.current.children;
     if (!cards || cards.length === 0) return;
 
-    const viewportCenter = window.innerWidth / 2;
+    const viewportRect = viewportRef.current
+      ? viewportRef.current.getBoundingClientRect()
+      : { left: 0, width: window.innerWidth };
+    const viewportCenter = viewportRect.left + viewportRect.width / 2;
     let closestIndex = 0;
     let minDistance = Infinity;
 
@@ -141,14 +140,29 @@ export default function ProjectsSection() {
   useEffect(() => {
     updateTrackMeasurement();
     updateActiveIndexFromTrack();
+
+    if (!trackRef.current || !viewportRef.current) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateTrackMeasurement();
+      updateActiveIndexFromTrack();
+    });
+
+    resizeObserver.observe(trackRef.current);
+    resizeObserver.observe(viewportRef.current);
+
     const timer = setTimeout(() => {
       updateTrackMeasurement();
       updateActiveIndexFromTrack();
     }, 200);
-    return () => clearTimeout(timer);
+
+    return () => {
+      resizeObserver.disconnect();
+      clearTimeout(timer);
+    };
   }, []);
 
-  // Transform vertical scroll progress into horizontal track translation (heavy, smooth, cinematic)
+  // Smooth horizontal spring
   const rawX = useTransform(scrollYProgress, [0.05, 0.95], [0, -maxTranslate]);
   const smoothX = useSpring(rawX, {
     stiffness: 180,
@@ -156,19 +170,17 @@ export default function ProjectsSection() {
     mass: 0.8,
   });
 
-  // Smooth continuous progress width (0% -> 100%)
+  // Smooth progress width
   const progressWidth = useTransform(scrollYProgress, [0.05, 0.95], ['0%', '100%']);
   const smoothProgressWidth = useSpring(progressWidth, {
     stiffness: 240,
     damping: 30,
   });
 
-  // Update active project index dynamically in real-time as smoothX animates
   useMotionValueEvent(smoothX, 'change', () => {
     updateActiveIndexFromTrack();
   });
 
-  // Smooth scroll handler for PREV / NEXT navigation buttons
   const scrollToIndex = (targetIndex) => {
     if (!sectionRef.current) return;
     const boundedIndex = Math.max(0, Math.min(PROJECTS_DATA.length - 1, targetIndex));
@@ -191,51 +203,50 @@ export default function ProjectsSection() {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative bg-porcelain-100 bg-editorial-grid border-t mb-28 border-black/10 min-h-[380vh] md:min-h-[420vh]"
+      className="relative bg-porcelain border-t border-border-subtle min-h-[400vh] transition-colors duration-700"
     >
-      {/* DESKTOP & TABLET HORIZONTAL PINNED SHOWCASE VIEW */}
+      {/* STICKY VIEWPORT CONTAINER (100svh for height-proof scaling) */}
       <div
         ref={viewportRef}
-        className="hidden md:flex sticky top-0 h-screen py-6 flex-col justify-between overflow-hidden select-none z-10"
+        className="sticky top-0 h-[100svh] py-3 sm:py-5 lg:py-8 flex flex-col justify-between overflow-hidden select-none z-10"
       >
         {/* SECTION HEADER */}
         <motion.div
-          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-7xl mx-auto px-6 lg:px-8 w-full shrink-0 pt-12"
+          className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 w-full shrink-0 pt-16 sm:pt-18 md:pt-6 lg:pt-8"
         >
-          <div className="flex items-end justify-between gap-6 border-b border-black/10 pb-4">
+          <div className="flex items-end justify-between gap-4 sm:gap-6 border-b border-border-subtle pb-2.5 sm:pb-4 transition-colors duration-700">
             <div>
-              <div className="mb-2">
+              <div className="mb-1">
                 <SectionLabel number="04" title="SELECTED WORK" />
               </div>
-              <h2 className="font-display text-4xl md:text-6xl font-medium uppercase tracking-tight text-porcelain-950">
-                Selected <span className="font-serif text-accent italic">Work</span>
+              <h2 className="text-2xl sm:text-4xl md:text-5xl font-display font-medium uppercase tracking-tight text-onyx">
+                Selected <span className="font-serif text-accent italic font-normal">Work</span>
               </h2>
             </div>
-            <div className="flex flex-col items-end gap-1">
-              <div className="flex items-center gap-2 font-mono text-sm font-bold text-porcelain-950">
-                <span className="text-base text-onyx">
-                  {PROJECTS_DATA[activeProjectIndex].number}
-                </span>
-                <span className="text-onyx/50">/</span>
-                <span className="text-onyx/70">05</span>
+
+            <div className="flex flex-col items-end gap-0.5">
+              <div className="flex items-center gap-1.5 sm:gap-2 font-mono text-xs sm:text-sm font-bold text-onyx">
+                <span>{PROJECTS_DATA[activeProjectIndex].number}</span>
+                <span className="text-subtle/40">/</span>
+                <span className="text-subtle/60">05</span>
               </div>
-              <p className="text-xs sm:text-base text-zinc tracking-wider max-w-sm font-mono ">
-                Every project starts differently. What matters is turning the right idea into something useful, considered, and real.
+              <p className="text-xs sm:text-sm text-subtle max-w-xs font-normal leading-relaxed text-right hidden sm:block">
+                Every project starts differently. What matters is turning the right idea into something useful and real.
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* MAIN HORIZONTAL SCROLL SHOWCASE TRACK */}
-        <div className="relative w-full flex-1 flex items-center overflow-hidden my-auto mt-8 py-4">
+        {/* MAIN HORIZONTAL TRACK */}
+        <div className="relative w-full flex-1 min-h-0 flex items-center overflow-hidden my-auto py-2">
           <motion.div
             ref={trackRef}
             style={{ x: prefersReducedMotion ? 0 : smoothX }}
-            className="flex items-center gap-16 md:gap-20 lg:gap-24 pl-[12vw] pr-[12vw] md:pl-[14vw] md:pr-[14vw] w-max h-full py-2"
+            className="flex items-center gap-8 sm:gap-12 md:gap-16 lg:gap-24 pl-[6vw] pr-[6vw] sm:pl-[10vw] sm:pr-[10vw] md:pl-[14vw] md:pr-[14vw] lg:pl-[18vw] lg:pr-[18vw] w-max h-full py-1"
           >
             {PROJECTS_DATA.map((project, idx) => {
               const isActive = activeProjectIndex === idx;
@@ -243,7 +254,7 @@ export default function ProjectsSection() {
               return (
                 <div
                   key={project.id}
-                  className="w-[78vw] md:w-[72vw] lg:w-[68vw] max-w-270 h-[60vh] md:h-[64vh] max-h-165 shrink-0"
+                  className="w-[88vw] sm:w-[82vw] md:w-[74vw] lg:w-[64vw] max-w-[1120px] h-auto max-h-full shrink-0 flex flex-col justify-center my-auto"
                 >
                   <ProjectCard
                     project={project}
@@ -255,35 +266,36 @@ export default function ProjectsSection() {
           </motion.div>
         </div>
 
-        {/* FOOTER NAVIGATION & PROGRESS BAR */}
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full shrink-0 flex items-center justify-between pt-3 border-t border-black/10 text-xs text-subtle font-mono">
-          {/* Continuous Progress Indicator Line */}
-          <div className="flex items-center gap-4 w-1/2 max-w-md">
-            <span className="text-porcelain-950 font-bold text-xs">
+        {/* FOOTER NAVIGATION */}
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 w-full shrink-0 flex items-center justify-between pt-2.5 sm:pt-3 border-t border-border-subtle text-xs text-subtle font-mono transition-colors duration-700">
+          {/* Progress Line */}
+          <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xs sm:max-w-sm">
+            <span className="text-onyx font-bold text-xs">
               {PROJECTS_DATA[activeProjectIndex].number}
             </span>
-            <div className="relative flex-1 h-0.5 bg-black/10 rounded-full overflow-hidden">
+            <div className="relative flex-1 h-[2px] bg-onyx/10 rounded-full overflow-hidden transition-colors duration-700">
               <motion.div
                 style={{ width: smoothProgressWidth }}
-                className="h-full bg-onyx"
+                className="h-full bg-onyx transition-colors duration-700"
               />
             </div>
-            <span className="text-onyx/70 text-xs">05</span>
+            <span className="text-subtle/50 text-xs">05</span>
           </div>
 
-          {/* Active Storytelling Chapter Label */}
-          <div className="hidden lg:block font-serif italic text-sm text-porcelain-700">
+          {/* Tagline */}
+          <div className="hidden lg:block font-serif italic text-sm text-subtle truncate max-w-sm px-4">
             "{PROJECTS_DATA[activeProjectIndex].tagline}"
           </div>
 
-          {/* Navigation Jump Controls */}
-          <div className="flex items-center gap-3">
+          {/* PREV / NEXT Buttons */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-2 sm:ml-4">
             <MotionButton
               onClick={() => scrollToIndex(activeProjectIndex - 1)}
               disabled={activeProjectIndex === 0}
               variant="outline"
-              size="sm"
-              icon={<ChevronLeft className="w-3.5 h-3.5" />}
+              size="xs"
+              className="px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs"
+              icon={<ChevronLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
               iconPosition="left"
               aria-label="Previous project"
               title="Previous Project"
@@ -295,8 +307,9 @@ export default function ProjectsSection() {
               onClick={() => scrollToIndex(activeProjectIndex + 1)}
               disabled={activeProjectIndex === PROJECTS_DATA.length - 1}
               variant="outline"
-              size="sm"
-              icon={<ChevronRight className="w-3.5 h-3.5" />}
+              size="xs"
+              className="px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs"
+              icon={<ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
               iconPosition="right"
               aria-label="Next project"
               title="Next Project"
@@ -304,40 +317,8 @@ export default function ProjectsSection() {
               NEXT
             </MotionButton>
           </div>
-
-        </div>
-      </div>
-
-      {/* MOBILE VERTICAL EDITORIAL STACK VIEW (< 768px) */}
-      <div className="md:hidden px-4 sm:px-6 py-12 space-y-16">
-        {/* Mobile Header */}
-        <div className="space-y-3 border-b border-black/10 pb-6">
-          <SectionLabel number="04" title="SELECTED WORK" />
-          <h2 className="font-display text-3xl font-bold uppercase tracking-tight text-porcelain-950">
-            Selected Work
-          </h2>
-          <p className="text-xs text-subtle leading-relaxed">
-            Every project starts differently. What matters is turning the right idea into something useful, considered, and real.
-          </p>
-        </div>
-
-        {/* Vertical Editorial Cards */}
-        <div className="space-y-16">
-          {PROJECTS_DATA.map((project) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 35, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="bg-white border border-black/10 rounded-2xl p-5 shadow-lg space-y-6"
-            >
-              <ProjectCard project={project} isActive={true} />
-            </motion.div>
-          ))}
         </div>
       </div>
     </section>
   );
 }
-

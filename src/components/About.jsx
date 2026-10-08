@@ -26,32 +26,35 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative py-20 md:py-32 bg-porcelain border-t border-border-subtle min-h-screen flex flex-col justify-center overflow-hidden transition-colors duration-700 scroll-mt-20"
+      className="relative py-20 md:py-32 bg-porcelain border-t border-border-subtle min-h-screen flex flex-col justify-center overflow-x-clip transition-colors duration-700 scroll-mt-20"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          className="mb-8"
+          className="mb-6 sm:mb-8"
         >
           <SectionLabel number="01" title="ABOUT ME" />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-20 2xl:gap-32 items-start">
           <motion.div
             variants={containerVariants}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="lg:col-span-7 flex flex-col gap-10"
+            className="lg:col-span-7 flex flex-col gap-8 sm:gap-10"
           >
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-display font-medium tracking-tight text-onyx leading-[1.05]">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-medium tracking-tight text-onyx leading-[1.05]">
               Architecting systems where deep logic meets{" "}
               <span className="font-serif text-accent italic font-normal">
                 visual precision.
               </span>
             </h2>
+
+            {/* Mobile-only reserved landing area for Hero image scroll transform */}
+            <div aria-hidden="true" className="lg:hidden w-full h-[320px] sm:h-[360px] md:h-[400px] my-2 shrink-0 pointer-events-none" />
 
             <div className="space-y-6">
               <RevealTextOnScroll
@@ -89,10 +92,10 @@ export default function About() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.15, ease: [0.16, 1, 0.3, 1] }}
                   whileHover={{ y: -5 }}
-                  className="p-6 rounded-3xl bg-surface/50 border border-border-subtle flex items-start gap-4 transition-all duration-500 shadow-sm hover:shadow-xl"
+                  className="p-4 sm:p-6 rounded-3xl bg-surface/50 border border-border-subtle flex items-start gap-4 transition-all duration-500 shadow-sm hover:shadow-xl"
                 >
                   {/* Icon container swaps colors based on theme */}
-                  <div className="p-2.5 rounded-2xl bg-onyx text-porcelain shadow-lg transition-colors duration-700">
+                  <div className="p-2.5 rounded-2xl bg-onyx text-porcelain shadow-lg transition-colors duration-700 shrink-0">
                     {card.icon}
                   </div>
                   <div>
@@ -109,7 +112,7 @@ export default function About() {
 
             <motion.div
               variants={itemVariants}
-              className="flex flex-wrap gap-3"
+              className="flex flex-wrap gap-2.5 sm:gap-3"
             >
               {[
                 "📍 India / Remote",

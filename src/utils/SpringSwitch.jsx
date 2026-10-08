@@ -36,7 +36,7 @@ export default function SpringSwitch({ className = '' }) {
   };
 
   return (
-    <div className={`fixed top-0 right-6 sm:right-12 lg:right-24 z-110 pointer-events-auto select-none flex flex-col items-center ${className}`}>
+    <div className={`fixed top-0 right-4 sm:right-6 md:right-8 lg:right-12 xl:right-24 z-110 pointer-events-auto select-none flex flex-col items-center ${className}`}>
       
       {/* Top Fixture */}
       <div className="w-3 h-1.5 rounded-b-md bg-onyx transition-colors duration-700" />
