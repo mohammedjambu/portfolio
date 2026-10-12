@@ -20,6 +20,51 @@ const NAV_ITEMS = [
   { label: "Contact", href: "#contact" },
 ];
 
+const drawerVariants = {
+  closed: {
+    opacity: 0,
+    y: -14,
+    scale: 0.95,
+    x: "-50%",
+    filter: "blur(6px)",
+    transition: {
+      duration: 0.22,
+      ease: [0.32, 0, 0.67, 0],
+    },
+  },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    x: "-50%",
+    filter: "blur(0px)",
+    transition: {
+      type: "spring",
+      stiffness: 340,
+      damping: 26,
+      mass: 0.8,
+      staggerChildren: 0.03,
+      delayChildren: 0.04,
+    },
+  },
+};
+
+const itemVariants = {
+  closed: {
+    opacity: 0,
+    x: -8,
+  },
+  open: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      type: "spring",
+      stiffness: 380,
+      damping: 26,
+    },
+  },
+};
+
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
   const [hoveredSection, setHoveredSection] = useState(null);
@@ -30,6 +75,9 @@ export default function Navbar() {
 
   const { scrollY } = useScroll();
   const lastScrollY = useRef(0);
+  const scrollStartRef = useRef(0);
+  const drawerRef = useRef(null);
+  const menuButtonRef = useRef(null);
 
   // Close mobile drawer on desktop resize or Escape key
   useEffect(() => {
@@ -47,8 +95,76 @@ export default function Navbar() {
     };
   }, []);
 
+  // Track initial scroll position when modal opens
+  useEffect(() => {
+    if (mobileOpen) {
+      scrollStartRef.current = window.scrollY;
+    }
+  }, [mobileOpen]);
+
+  // Close mobile drawer when user starts scrolling
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const startY = window.scrollY;
+    const threshold = 10;
+
+    const handleScroll = () => {
+      if (Math.abs(window.scrollY - startY) > threshold) {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    // Also support Lenis smooth scroll instance
+    const lenis = window.__lenis;
+    const handleLenisScroll = (e) => {
+      const current = typeof e?.scroll === "number" ? e.scroll : window.scrollY;
+      if (Math.abs(current - startY) > threshold) {
+        setMobileOpen(false);
+      }
+    };
+    if (lenis) {
+      lenis.on("scroll", handleLenisScroll);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (lenis) {
+        lenis.off("scroll", handleLenisScroll);
+      }
+    };
+  }, [mobileOpen]);
+
+  // Close mobile drawer when clicking outside the modal
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (
+        drawerRef.current &&
+        !drawerRef.current.contains(e.target) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(e.target)
+      ) {
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handleClickOutside);
+    return () => {
+      document.removeEventListener("pointerdown", handleClickOutside);
+    };
+  }, [mobileOpen]);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     const diff = latest - lastScrollY.current;
+
+    // Close mobile drawer on scroll via motion value
+    if (mobileOpen && Math.abs(latest - scrollStartRef.current) > 10) {
+      setMobileOpen(false);
+    }
 
     if (latest < 60) {
       setIsScrolled(false);
@@ -228,37 +344,79 @@ export default function Navbar() {
 
           {/* Mobile Menu Trigger */}
           <button
+            ref={menuButtonRef}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-expanded={mobileOpen}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-controls="mobile-navigation-drawer"
-            className="lg:hidden p-1.5 sm:p-2 text-onyx outline-none ml-1 sm:ml-1.5 rounded-full hover:bg-onyx/5 focus-visible:outline-2 focus-visible:outline-accent shrink-0"
+            className="lg:hidden p-1.5 sm:p-2 text-onyx outline-none ml-1 sm:ml-1.5 rounded-full hover:bg-onyx/5 focus-visible:outline-2 focus-visible:outline-accent shrink-0 relative flex items-center justify-center overflow-hidden"
           >
-            {mobileOpen ? <X size={17} /> : <Menu size={17} />}
+            <AnimatePresence mode="wait" initial={false}>
+              {mobileOpen ? (
+                <motion.span
+                  key="close-icon"
+                  initial={{ rotate: -90, opacity: 0, scale: 0.7 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 90, opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="flex items-center justify-center"
+                >
+                  <X size={17} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="menu-icon"
+                  initial={{ rotate: 90, opacity: 0, scale: 0.7 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: -90, opacity: 0, scale: 0.7 }}
+                  transition={{ duration: 0.18, ease: "easeOut" }}
+                  className="flex items-center justify-center"
+                >
+                  <Menu size={17} />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </motion.nav>
 
-      {/* --- MOBILE DRAWER --- */}
+      {/* --- BACKDROP & MOBILE DRAWER --- */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            key="mobile-drawer-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            onClick={() => setMobileOpen(false)}
+            className="fixed inset-0 z-40 bg-black/25 dark:bg-black/50 backdrop-blur-[2px] pointer-events-auto lg:hidden touch-pan-y"
+            aria-hidden="true"
+          />
+        )}
+        {mobileOpen && (
+          <motion.div
+            ref={drawerRef}
+            key="mobile-drawer-content"
             id="mobile-navigation-drawer"
             role="dialog"
             aria-modal="true"
             aria-label="Mobile Navigation"
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute top-14 sm:top-16 left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-sm max-h-[calc(100dvh-5rem)] overflow-y-auto glass-island rounded-3xl p-3 sm:p-4 pointer-events-auto lg:hidden shadow-2xl"
+            variants={drawerVariants}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            style={{ transformOrigin: "top center" }}
+            className="absolute top-14 sm:top-16 left-1/2 w-[calc(100vw-2rem)] max-w-sm max-h-[calc(100dvh-5rem)] overflow-y-auto glass-modal rounded-3xl p-3 sm:p-4 pointer-events-auto lg:hidden shadow-2xl z-50"
           >
             <div className="flex flex-col gap-1">
               {NAV_ITEMS.map((item, i) => (
-                <a
-                  key={i}
+                <motion.a
+                  key={item.label}
+                  variants={itemVariants}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className={`flex items-center justify-between p-3 sm:p-3.5 rounded-2xl transition-colors duration-300 font-bold text-xs sm:text-sm uppercase tracking-widest ${
+                  className={`flex items-center justify-between p-3 sm:p-3.5 rounded-2xl transition-colors duration-200 font-bold text-xs sm:text-sm uppercase tracking-widest ${
                     activeSection === item.href.replace("#", "")
                       ? "bg-onyx/10 text-onyx"
                       : "hover:bg-onyx/5 text-onyx"
@@ -266,7 +424,7 @@ export default function Navbar() {
                 >
                   <span>{item.label}</span>
                   <span className="text-[10px] font-mono text-subtle">0{i + 1}</span>
-                </a>
+                </motion.a>
               ))}
             </div>
           </motion.div>

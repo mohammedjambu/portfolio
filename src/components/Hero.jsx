@@ -45,10 +45,10 @@ export default function Hero({ sectionRef }) {
     <section
       id="home"
       ref={sectionRef}
-      className="relative min-h-[95dvh] pt-24 sm:pt-28 pb-4 md:pt-32 md:pb-6 flex flex-col justify-between bg-porcelain-100 transition-colors duration-500 overflow-x-clip"
+      className="relative min-h-[95dvh] pt-20 sm:pt-28 pb-4 md:pt-32 md:pb-6 flex flex-col justify-between bg-porcelain-100 transition-colors duration-500 overflow-x-clip"
     >
       {/* Background Grid Pattern */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.018] dark:opacity-[0.035] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:4rem_4rem] transition-opacity duration-500" />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.018] dark:opacity-[0.035] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-size-[4rem_4rem] transition-opacity duration-500" />
 
       {/* Hero Content Container */}
       <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grow flex items-center justify-center py-2 sm:py-4">
@@ -91,7 +91,7 @@ export default function Hero({ sectionRef }) {
             {/* [AUDIT FIX: xl:items-start aligns text directly next to the central image] */}
             <motion.div
               variants={itemVariants}
-              className="text-center xl:text-left select-none flex flex-col items-center xl:items-start justify-center shrink-0 max-w-sm sm:max-w-md xl:max-w-[420px]"
+              className="text-center xl:text-left select-none flex flex-col items-center xl:items-start justify-center shrink-0 max-w-sm sm:max-w-md xl:max-w-105"
             >
               {/* 
                 [AUDIT FIX: Alignment spacer on desktop matching the height of the signature tag on the left,

@@ -10,6 +10,7 @@ export default function HeroImageTransition() {
     targetX: 300,
     scrollTarget: 900,
     isDesktop: false,
+    targetScale: 1.25,
   });
 
   const updateOffsets = () => {
@@ -27,9 +28,18 @@ export default function HeroImageTransition() {
       const heroCardRect = containerRef.current.getBoundingClientRect();
       const anchorRect = anchorEl.getBoundingClientRect();
 
-      // [AUDIT FIX: Exact live delta calculation immune to 110-150% zoom and mobile screen heights]
-      const deltaY = anchorRect.top - heroCardRect.top;
-      const deltaX = isDesktopLayout ? anchorRect.left - heroCardRect.left : 0;
+      const targetScale = isDesktopLayout ? 1.25 : 1.15;
+      const scaleOffsetY = (heroCardRect.height * (targetScale - 1)) / 2;
+
+      // Vertical alignment: on desktop align with top of anchor, on mobile center in reserved slot
+      const deltaY = isDesktopLayout
+        ? (anchorRect.top - heroCardRect.top) + scaleOffsetY
+        : (anchorRect.top - heroCardRect.top) + (anchorRect.height - heroCardRect.height * targetScale) / 2 + scaleOffsetY;
+
+      // Horizontal alignment: on desktop center within the right column anchor slot
+      const deltaX = isDesktopLayout
+        ? (anchorRect.left + anchorRect.width / 2) - (heroCardRect.left + heroCardRect.width / 2)
+        : 0;
 
       const currentScroll = window.scrollY || window.pageYOffset;
       const scrollTriggerDistance = aboutSection
@@ -41,6 +51,7 @@ export default function HeroImageTransition() {
         targetX: deltaX,
         scrollTarget: scrollTriggerDistance,
         isDesktop: isDesktopLayout,
+        targetScale,
       });
     }
   };
@@ -89,7 +100,7 @@ export default function HeroImageTransition() {
   const scale = useTransform(
     smoothScrollY,
     [0, offsets.scrollTarget],
-    [1, offsets.isDesktop ? 0.95 : 0.88],
+    [1, offsets.targetScale || (offsets.isDesktop ? 1.25 : 1.15)],
     { clamp: true }
   );
 
@@ -145,7 +156,7 @@ export default function HeroImageTransition() {
       >
         {/* Card dimensions responsive from mobile (210px) to wide screens (310px) */}
         <div
-          className="relative w-[200px] sm:w-[250px] md:w-[270px] lg:w-[270px] xl:w-[290px] 2xl:w-[350px] aspect-4/5 rounded-[inherit]"
+          className="relative w-50 sm:w-62.5 md:w-67.5 lg:w-67.5 xl:w-72.5 2xl:w-87.5 aspect-4/5 rounded-[inherit]"
           style={{ transformStyle: "preserve-3d" }}
         >
           {/* FRONT FACE (Hero Portrait: Mountain/Lake) */}
