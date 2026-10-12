@@ -145,7 +145,7 @@ export default function HeroImageTransition() {
       >
         {/* Card dimensions responsive from mobile (210px) to wide screens (310px) */}
         <div
-          className="relative w-[250px] sm:w-[250px] md:w-[270px] lg:w-[270px] xl:w-[290px] 2xl:w-[350px] aspect-4/5 rounded-[inherit]"
+          className="relative w-[200px] sm:w-[250px] md:w-[270px] lg:w-[270px] xl:w-[290px] 2xl:w-[350px] aspect-4/5 rounded-[inherit]"
           style={{ transformStyle: "preserve-3d" }}
         >
           {/* FRONT FACE (Hero Portrait: Mountain/Lake) */}
