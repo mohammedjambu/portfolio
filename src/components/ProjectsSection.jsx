@@ -17,6 +17,7 @@ export const PROJECTS_DATA = [
     githubUrl: null,
     liveUrl: 'https://www.smartsolarsolution.in/',
     themeGlow: 'from-amber-500/20 to-yellow-600/20',
+    image: '/images/projects/solartile.avif',
   },
   {
     id: 'wanderlust',
@@ -29,6 +30,7 @@ export const PROJECTS_DATA = [
     githubUrl: 'https://github.com/mohammedjambu/WanderLust',
     liveUrl: 'https://wanderlust-ebon-iota.vercel.app/',
     themeGlow: 'from-emerald-500/20 to-teal-600/20',
+    image: '/images/projects/wanderlust.avif',
   },
   {
     id: 'restuara',
@@ -41,6 +43,7 @@ export const PROJECTS_DATA = [
     githubUrl: null,
     liveUrl: 'https://restaura-5ea34.netlify.app/',
     themeGlow: 'from-rose-500/20 to-red-600/20',
+    image: '/images/projects/restaura.avif',
   },
   {
     id: 'green-cart-logistics',
@@ -53,6 +56,7 @@ export const PROJECTS_DATA = [
     githubUrl: null,
     liveUrl: null,
     themeGlow: 'from-teal-500/20 to-cyan-600/20',
+    image: '/images/projects/greencart.jpg',
   },
   {
     id: 'blog-platform',
@@ -65,6 +69,7 @@ export const PROJECTS_DATA = [
     githubUrl: 'https://github.com/mohammedjambu/BlogPlatform',
     liveUrl: 'https://blog-platform-six-zeta.vercel.app/',
     themeGlow: 'from-amber-500/20 to-orange-600/20',
+    image: '/images/projects/blog-platform.jpg',
   },
 ];
 
@@ -234,7 +239,7 @@ export default function ProjectsSection() {
                 <span className="text-subtle/40">/</span>
                 <span className="text-subtle/60">05</span>
               </div>
-              <p className="text-xs sm:text-sm text-subtle max-w-xs font-normal leading-relaxed text-right hidden sm:block">
+              <p className="text-xs sm:text-sm text-subtle max-w-xs font-normal leading-relaxed text-left hidden sm:block">
                 Every project starts differently. What matters is turning the right idea into something useful and real.
               </p>
             </div>

@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: "class",
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
       colors: {
         porcelain: {
-          DEFAULT: "#F8F9FA",
+          DEFAULT: "var(--porcelain)",
           50: "#FFFFFF",
           100: "#F8F9FA",
           200: "#F1F3F5",
@@ -18,11 +19,13 @@ export default {
           900: "#1A1D20",
           950: "#111113",
         },
-        onyx: "var(--color-onyx)",
-        subtle: "var(--color-subtle)",
+        onyx: "var(--onyx)",
+        surface: "var(--surface)",
+        subtle: "var(--subtle)",
+        "border-subtle": "var(--border-subtle)",
         accent: {
-          DEFAULT: "var(--color-accent)",
-          soft: "rgba(37, 99, 235, 0.7)", // This creates a very subtle blue tint
+          DEFAULT: "var(--accent)",
+          soft: "color-mix(in srgb, var(--accent) 70%, transparent)",
         },
       },
       fontFamily: {

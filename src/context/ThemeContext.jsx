@@ -3,7 +3,19 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+  // [AUDIT FIX: Fall back to user's OS preference if no stored theme exists]
+  const [theme, setTheme] = useState(() => {
+    try {
+      const saved = localStorage.getItem('theme');
+      if (saved === 'dark' || saved === 'light') return saved;
+      if (typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    } catch {
+      // In restricted sandboxes, gracefully default to light
+    }
+    return 'light';
+  });
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -12,7 +24,12 @@ export const ThemeProvider = ({ children }) => {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
+
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      // localStorage guard
+    }
   }, [theme]);
 
   const toggleTheme = () => {

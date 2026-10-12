@@ -1,6 +1,6 @@
 /**
- * Smoothly scrolls to a section by element ID with ideal vertical framing
- * clearance below the floating navigation bar.
+ * Smoothly scrolls to a section by element ID with vertical framing clearance
+ * below the floating dynamic island navigation bar.
  */
 export const scrollToSection = (targetId) => {
   const cleanId = (targetId || '').replace('#', '');
@@ -17,12 +17,12 @@ export const scrollToSection = (targetId) => {
   const el = document.getElementById(cleanId);
   if (!el) return;
 
-  // Target the primary inner content container for perfect framing
+  // Target the primary inner content container for framing
   const contentEl = el.querySelector('.max-w-7xl, .max-w-1800, .max-w-6xl') || el;
   const contentTop = contentEl.getBoundingClientRect().top + window.scrollY;
 
-  // Frame the section content ~100px from the top (just below the floating island navbar)
-  const targetY = Math.max(0, contentTop - 100);
+  // Frame the section content with ~90px clearance below the floating island navbar
+  const targetY = Math.max(0, contentTop - 90);
 
   if (window.__lenis) {
     window.__lenis.scrollTo(targetY, { duration: 1.2 });

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   motion,
   AnimatePresence,
@@ -31,9 +31,25 @@ export default function Navbar() {
   const { scrollY } = useScroll();
   const lastScrollY = useRef(0);
 
+  // Close mobile drawer on desktop resize or Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") setMobileOpen(false);
+    };
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) setMobileOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   useMotionValueEvent(scrollY, "change", (latest) => {
     const diff = latest - lastScrollY.current;
-    
+
     if (latest < 60) {
       setIsScrolled(false);
       setScrollDirection("up");
@@ -44,13 +60,19 @@ export default function Navbar() {
     }
     lastScrollY.current = latest;
 
-    // Enhanced Scroll Spy
+    // Scroll-spy calculation
     const sectionIds = NAV_ITEMS.map((item) => item.href.replace("#", ""));
-    const scrollPosition = latest + 150;
+    const viewportOffset = window.innerHeight * 0.35;
     let current = sectionIds[0];
+
     for (const id of sectionIds) {
       const el = document.getElementById(id);
-      if (el && scrollPosition >= el.offsetTop) current = id;
+      if (el) {
+        const top = el.getBoundingClientRect().top;
+        if (top <= viewportOffset) {
+          current = id;
+        }
+      }
     }
     if (activeSection !== current) setActiveSection(current);
   });
@@ -63,7 +85,6 @@ export default function Navbar() {
 
   const showAvailability = isScrolled && scrollDirection === "down";
 
-  // Shared animation transition for the "Island" feel
   const sharedTransition = {
     type: "spring",
     stiffness: 300,
@@ -72,62 +93,93 @@ export default function Navbar() {
   };
 
   return (
-    <header className="fixed top-5 inset-x-0 mx-auto w-full max-w-[calc(100vw-2rem)] lg:max-w-max z-50 flex justify-center pointer-events-none">
+    <header className="fixed top-3.5 sm:top-5 inset-x-0 mx-auto w-full max-w-[calc(100vw-1.5rem)] sm:max-w-[calc(100vw-2rem)] lg:max-w-max z-50 flex items-center justify-center gap-2 pointer-events-none px-2">
       <motion.nav
         layout
         transition={sharedTransition}
-        className={`pointer-events-auto relative flex items-center transition-colors duration-500 rounded-full border border-border-subtle p-1.5 max-w-full ${
+        aria-label="Main Navigation"
+        className={`pointer-events-auto relative flex items-center transition-colors duration-500 rounded-full border border-border-subtle p-1 sm:p-1.5 max-w-full ${
           isScrolled
             ? "glass-island shadow-2xl shadow-black/10"
             : "bg-surface/90 backdrop-blur-xl shadow-sm"
         }`}
       >
         {/* --- AVATAR (Always Visible) --- */}
-        <div className="flex items-center pl-1.5 pr-2">
+        <div className="flex items-center pl-1 pr-1.5 sm:pl-1.5 sm:pr-2 shrink-0">
           <a
             href="#home"
             onClick={(e) => handleNavClick(e, "#home")}
-            className="relative w-8 h-8 rounded-full overflow-hidden border border-border-subtle group-hover:scale-105 transition-transform duration-300"
+            aria-label="Navigate to top / Home"
+            className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-border-subtle hover:scale-105 transition-transform duration-300 focus-visible:outline-2 focus-visible:outline-accent"
           >
-            <img src="/images/myimage.jpg" alt="Profile" className="w-full h-full object-cover" />
+            <img
+              src="/images/myimage.jpg"
+              alt="Mohammed Jambughoda"
+              className="w-full h-full object-cover"
+              loading="eager"
+            />
           </a>
         </div>
 
-        <motion.div layout className="w-px h-4 bg-onyx/10" />
+        <motion.div layout className="w-px h-4 bg-onyx/10 shrink-0" />
 
         {/* --- DYNAMIC ISLAND CONTENT --- */}
-        <div className="relative flex items-center justify-center overflow-hidden px-2">
+        <div className="relative flex items-center justify-center px-1 sm:px-2">
           <AnimatePresence mode="popLayout" initial={false}>
             {showAvailability ? (
-              /* AVAILABILITY PILL */
+              /* 
+                [AUDIT FIX: AVAILABILITY PILL - FULL ONE-LINE VISIBILITY ON MOBILE]
+                Replaced rigid min-w-40 with content-adaptive min-w-max.
+                Added whitespace-nowrap and tuned tracking so "AVAILABLE FOR WORK" never truncates.
+              */
               <motion.div
-                  key="avail"
-                  layout
-                  initial={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
-                  animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
-                  onMouseEnter={() => setPillHovered(true)}
-                  onMouseLeave={() => setPillHovered(false)}
-                  onClick={(e) => handleNavClick(e, "#contact")}
-                  className="relative overflow-hidden cursor-pointer px-4 py-1.5 rounded-full bg-onyx/5 border border-border-subtle flex items-center justify-center min-w-44 sm:min-w-56 max-w-full h-8 select-none"
+                key="avail"
+                layout
+                initial={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
+                animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+                exit={{ opacity: 0, scale: 0.9, filter: "blur(8px)" }}
+                onMouseEnter={() => setPillHovered(true)}
+                onMouseLeave={() => setPillHovered(false)}
+                onClick={(e) => handleNavClick(e, "#contact")}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => e.key === "Enter" && handleNavClick(e, "#contact")}
+                aria-label="Available for work. Click to contact."
+                className="relative overflow-hidden cursor-pointer px-4 sm:px-4 py-2 sm:py-1.5 rounded-full bg-onyx/5 border border-border-subtle flex items-center justify-center min-w-max h-8 sm:h-8 select-none focus-visible:outline-2 focus-visible:outline-accent shrink-0"
+              >
+                <motion.div
+                  animate={{ rotateX: pillHovered ? 180 : 0 }}
+                  className="relative w-full h-full transition-transform duration-100 flex items-center justify-center"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  <motion.div
-                    animate={{ rotateX: pillHovered ? 180 : 0 }}
-                    className="relative w-full h-full transform-3d transition-transform duration-100"
+                  {/* FRONT: AVAILABLE FOR WORK */}
+                  <div
+                    className="flex items-center justify-center gap-1.5 sm:gap-2 whitespace-nowrap"
+                    style={{ backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
                   >
-                    <div className="absolute inset-0 flex items-center justify-center gap-2 backface-hidden">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      <span className="text-xs font-mono tracking-widest uppercase font-bold text-onyx/70">
-                        Available for Work
-                      </span>
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center transform-[rotateX(180deg)] backface-hidden text-accent font-bold text-xs uppercase">
-                      Let's Connect <ArrowUpRight className="w-3.5 h-3.5 inline ml-1 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </div>
-                  </motion.div>
+                    <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                    {/* [AUDIT FIX: Removed truncate, added whitespace-nowrap & responsive letter-spacing] */}
+                    <span className="text-[11px] sm:text-xs font-mono tracking-wider sm:tracking-widest uppercase font-bold text-onyx/75 whitespace-nowrap">
+                      Available for Work
+                    </span>
+                  </div>
+
+                  {/* BACK: LET'S CONNECT */}
+                  <div
+                    className="absolute inset-0 flex items-center justify-center text-accent font-bold text-[10px] sm:text-xs uppercase whitespace-nowrap"
+                    style={{
+                      transform: "rotateX(180deg)",
+                      backfaceVisibility: "hidden",
+                      WebkitBackfaceVisibility: "hidden",
+                    }}
+                  >
+                    <span>Let's Connect</span>
+                    <ArrowUpRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 inline ml-1 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 shrink-0" />
+                  </div>
                 </motion.div>
+              </motion.div>
             ) : (
-              /* NAVIGATION LINKS */
+              /* NAVIGATION LINKS (DESKTOP) */
               <motion.div
                 key="nav-links"
                 layout
@@ -147,11 +199,11 @@ export default function Navbar() {
                       onClick={(e) => handleNavClick(e, item.href)}
                       onMouseEnter={() => setHoveredSection(targetId)}
                       onMouseLeave={() => setHoveredSection(null)}
-                      className={`relative px-2.5 lg:px-3 xl:px-4 py-1.5 text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 ${
+                      aria-current={isActive ? "page" : undefined}
+                      className={`relative px-2 xl:px-3 py-1.5 text-[10px] xl:text-[11px] font-bold uppercase tracking-widest transition-colors duration-300 focus-visible:outline-2 focus-visible:outline-accent rounded-full whitespace-nowrap ${
                         isActive ? "text-onyx" : "text-subtle hover:text-onyx"
                       }`}
                     >
-                      {/* Hover Pill */}
                       {hoveredSection === targetId && (
                         <motion.div
                           layoutId="nav-hover-bg"
@@ -159,11 +211,10 @@ export default function Navbar() {
                           transition={{ type: "spring", bounce: 0.1, duration: 0.4 }}
                         />
                       )}
-                      {/* Active Underline */}
                       {isActive && (
                         <motion.div
                           layoutId="nav-active-underline"
-                          className="absolute bottom-0 left-2.5 right-2.5 lg:left-3 lg:right-3 xl:left-4 xl:right-4 h-0.5 bg-onyx rounded-full"
+                          className="absolute bottom-0 left-2 right-2 xl:left-3 xl:right-3 h-0.5 bg-onyx rounded-full"
                           transition={sharedTransition}
                         />
                       )}
@@ -178,9 +229,12 @@ export default function Navbar() {
           {/* Mobile Menu Trigger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden p-2 text-onyx outline-none ml-2"
+            aria-expanded={mobileOpen}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-controls="mobile-navigation-drawer"
+            className="lg:hidden p-1.5 sm:p-2 text-onyx outline-none ml-1 sm:ml-1.5 rounded-full hover:bg-onyx/5 focus-visible:outline-2 focus-visible:outline-accent shrink-0"
           >
-            {mobileOpen ? <X size={18} /> : <Menu size={18} />}
+            {mobileOpen ? <X size={17} /> : <Menu size={17} />}
           </button>
         </div>
       </motion.nav>
@@ -189,10 +243,14 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
+            id="mobile-navigation-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile Navigation"
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute top-16 left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-md glass-island rounded-3xl p-4 pointer-events-auto lg:hidden"
+            className="absolute top-14 sm:top-16 left-1/2 -translate-x-1/2 w-[calc(100vw-2rem)] max-w-sm max-h-[calc(100dvh-5rem)] overflow-y-auto glass-island rounded-3xl p-3 sm:p-4 pointer-events-auto lg:hidden shadow-2xl"
           >
             <div className="flex flex-col gap-1">
               {NAV_ITEMS.map((item, i) => (
@@ -200,9 +258,13 @@ export default function Navbar() {
                   key={i}
                   href={item.href}
                   onClick={(e) => handleNavClick(e, item.href)}
-                  className="flex items-center justify-between p-4 rounded-2xl hover:bg-onyx/5 text-onyx font-bold text-sm uppercase tracking-widest transition-colors duration-300"
+                  className={`flex items-center justify-between p-3 sm:p-3.5 rounded-2xl transition-colors duration-300 font-bold text-xs sm:text-sm uppercase tracking-widest ${
+                    activeSection === item.href.replace("#", "")
+                      ? "bg-onyx/10 text-onyx"
+                      : "hover:bg-onyx/5 text-onyx"
+                  }`}
                 >
-                  {item.label}
+                  <span>{item.label}</span>
                   <span className="text-[10px] font-mono text-subtle">0{i + 1}</span>
                 </a>
               ))}
@@ -211,7 +273,9 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      <SpringSwitch />
+      <div className="pointer-events-auto shrink-0">
+        <SpringSwitch />
+      </div>
     </header>
   );
 }

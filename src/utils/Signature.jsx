@@ -1,13 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-/**
- * Professional Clean Handwriting Signature Component for MOHAMMED JAMBUGHODA
- * Features crisp, perfectly readable handwriting typography (Sacramento / Dancing Script)
- * combined with organic letter-by-letter pen stroke reveal animation,
- * a trailing pen nib cursor, and a sleek finishing underline flourish.
- */
-
-// Natural pen guide path curves that navigate through the letters
 const PATH_MOHAMMED_GUIDE = `
   M 20 62 
   C 30 35, 45 30, 55 60 
@@ -53,7 +45,6 @@ export default function Signature({ className = "" }) {
 
   const [hasStarted, setHasStarted] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
-  const [penPos, setPenPos] = useState({ x: 0, y: 0, visible: false, opacity: 0 });
 
   const [length1, setLength1] = useState(0);
   const [length2, setLength2] = useState(0);
@@ -63,7 +54,7 @@ export default function Signature({ className = "" }) {
   const [offset2, setOffset2] = useState(9999);
   const [offset3, setOffset3] = useState(9999);
 
-  // Measure path lengths & check prefers-reduced-motion
+  // Measure path lengths & support reduced-motion
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -88,7 +79,7 @@ export default function Signature({ className = "" }) {
     setOffset3(l3);
   }, []);
 
-  // IntersectionObserver trigger at 25% footer visibility
+  // IntersectionObserver trigger at 20% visibility
   useEffect(() => {
     if (isComplete || hasStarted) return;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -101,7 +92,7 @@ export default function Signature({ className = "" }) {
           observer.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.2 }
     );
 
     if (containerRef.current) {
@@ -111,26 +102,18 @@ export default function Signature({ className = "" }) {
     return () => observer.disconnect();
   }, [hasStarted, isComplete]);
 
-  // Main pen writing animation loop with slower, more deliberate timing
+  // Pen writing animation loop
   useEffect(() => {
     if (!hasStarted || isComplete) return;
 
     let animFrameId;
     let startTime = null;
 
-    // Timing budget (in ms) - Slower writing speed:
-    // 0 -> 1400ms: MOHAMMED reveal (~1.4s)
-    // 1400 -> 1580ms: micro-pause (180ms)
-    // 1580 -> 3180ms: JAMBUGHODA reveal (~1.6s)
-    // 3180 -> 3320ms: micro-pause (140ms)
-    // 3320 -> 3770ms: UNDERLINE FLOURISH (~0.45s)
-    // 3770ms+: Complete
-
-    const DUR_MOHAMMED = 1400;
-    const PAUSE_1 = 180;
-    const DUR_JAMBUGHODA = 1600;
-    const PAUSE_2 = 140;
-    const DUR_FLOURISH = 450;
+    const DUR_MOHAMMED = 1300;
+    const PAUSE_1 = 160;
+    const DUR_JAMBUGHODA = 1500;
+    const PAUSE_2 = 120;
+    const DUR_FLOURISH = 420;
 
     const T1_END = DUR_MOHAMMED;
     const T2_START = T1_END + PAUSE_1;
@@ -144,31 +127,13 @@ export default function Signature({ className = "" }) {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
 
-      let currentPenPoint = null;
-      let penActive = false;
-
       // Phase 1: MOHAMMED
       if (elapsed <= T1_END) {
         const progress = Math.min(1, Math.max(0, elapsed / DUR_MOHAMMED));
         const eased = easeInOutPen(progress);
         setOffset1(length1 * (1 - eased));
-
-        if (pathRef1.current) {
-          const pt = pathRef1.current.getPointAtLength(eased * length1);
-          currentPenPoint = { x: pt.x, y: pt.y };
-          penActive = true;
-        }
       } else {
         setOffset1(0);
-      }
-
-      // Pause 1
-      if (elapsed > T1_END && elapsed < T2_START) {
-        if (pathRef1.current) {
-          const pt = pathRef1.current.getPointAtLength(length1);
-          currentPenPoint = { x: pt.x, y: pt.y };
-          penActive = true;
-        }
       }
 
       // Phase 2: JAMBUGHODA
@@ -176,23 +141,8 @@ export default function Signature({ className = "" }) {
         const progress = Math.min(1, Math.max(0, (elapsed - T2_START) / DUR_JAMBUGHODA));
         const eased = easeInOutPen(progress);
         setOffset2(length2 * (1 - eased));
-
-        if (pathRef2.current) {
-          const pt = pathRef2.current.getPointAtLength(eased * length2);
-          currentPenPoint = { x: pt.x, y: pt.y };
-          penActive = true;
-        }
       } else if (elapsed > T2_END) {
         setOffset2(0);
-      }
-
-      // Pause 2
-      if (elapsed > T2_END && elapsed < T3_START) {
-        if (pathRef2.current) {
-          const pt = pathRef2.current.getPointAtLength(length2);
-          currentPenPoint = { x: pt.x, y: pt.y };
-          penActive = true;
-        }
       }
 
       // Phase 3: FLOURISH
@@ -200,27 +150,14 @@ export default function Signature({ className = "" }) {
         const progress = Math.min(1, Math.max(0, (elapsed - T3_START) / DUR_FLOURISH));
         const eased = easeInOutPen(progress);
         setOffset3(length3 * (1 - eased));
-
-        if (flourishRef.current) {
-          const pt = flourishRef.current.getPointAtLength(eased * length3);
-          currentPenPoint = { x: pt.x, y: pt.y };
-          penActive = true;
-        }
       } else if (elapsed > T3_END) {
         setOffset3(0);
       }
 
-      // Pen nib position & visibility
-      if (currentPenPoint && penActive) {
-        const opacity = elapsed > T3_END - 80 ? Math.max(0, (T3_END + 150 - elapsed) / 230) : 1;
-        setPenPos({ x: currentPenPoint.x, y: currentPenPoint.y, visible: opacity > 0, opacity });
-      }
-
-      if (elapsed < T3_END + 150) {
+      if (elapsed < T3_END + 100) {
         animFrameId = requestAnimationFrame(animate);
       } else {
         setIsComplete(true);
-        setPenPos((prev) => ({ ...prev, visible: false, opacity: 0 }));
       }
     };
 
@@ -232,7 +169,7 @@ export default function Signature({ className = "" }) {
     <div
       ref={containerRef}
       className={`relative inline-block w-full select-none ${className}`}
-      aria-label="Mohammed Jambughoda"
+      aria-label="Mohammed Jambughoda signature"
       role="img"
     >
       <svg
@@ -242,12 +179,6 @@ export default function Signature({ className = "" }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <filter id="glowPen" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="1.5" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-
-          {/* Mask 1: MOHAMMED reveal */}
           <mask id="maskMohammed">
             <path
               ref={pathRef1}
@@ -262,7 +193,6 @@ export default function Signature({ className = "" }) {
             />
           </mask>
 
-          {/* Mask 2: JAMBUGHODA reveal */}
           <mask id="maskJambughoda">
             <path
               ref={pathRef2}
@@ -278,9 +208,7 @@ export default function Signature({ className = "" }) {
           </mask>
         </defs>
 
-        {/* Crisp, Professional Signature Typography */}
         <g fill="currentColor">
-          {/* MOHAMMED */}
           <g mask={isComplete ? undefined : "url(#maskMohammed)"}>
             <text
               x="18"
@@ -296,7 +224,6 @@ export default function Signature({ className = "" }) {
             </text>
           </g>
 
-          {/* JAMBUGHODA */}
           <g mask={isComplete ? undefined : "url(#maskJambughoda)"}>
             <text
               x="240"
@@ -313,7 +240,6 @@ export default function Signature({ className = "" }) {
           </g>
         </g>
 
-        {/* Underline Flourish Stroke */}
         <path
           ref={flourishRef}
           d={PATH_FLOURISH}
@@ -324,17 +250,6 @@ export default function Signature({ className = "" }) {
           strokeDashoffset={offset3}
           fill="none"
         />
-
-        {/* Dynamic Pen Nib Cursor Indicator */}
-        {/* {penPos.visible && !isComplete && (
-          <g
-            transform={`translate(${penPos.x}, ${penPos.y})`}
-            style={{ opacity: penPos.opacity, transition: 'opacity 0.12s ease' }}
-          >
-            <circle r="5.5" fill="currentColor" opacity="0.25" filter="url(#glowPen)" />
-            <circle r="2.5" fill="currentColor" opacity="0.95" />
-          </g>
-        )} */}
       </svg>
     </div>
   );

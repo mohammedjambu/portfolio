@@ -18,6 +18,7 @@ export default function DinoGame() {
   const [level, setLevel] = useState(1);
   const [toast, setToast] = useState('');
   const [isTouchDucking, setIsTouchDucking] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const stateRef = useRef({
     gameState: 'idle',
@@ -37,15 +38,35 @@ export default function DinoGame() {
     lastSpawnX: 0,
   });
 
+  // [AUDIT FIX: Observe viewport intersection to sleep canvas RAF when off-screen]
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.05 }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   // Load High Score from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('mj_dino_high_score');
-    if (saved) {
-      const parsed = parseInt(saved, 10);
-      if (!isNaN(parsed)) {
-        setHighScore(parsed);
-        stateRef.current.highScore = parsed;
+    try {
+      const saved = localStorage.getItem('mj_dino_high_score');
+      if (saved) {
+        const parsed = parseInt(saved, 10);
+        if (!isNaN(parsed)) {
+          setHighScore(parsed);
+          stateRef.current.highScore = parsed;
+        }
       }
+    } catch {
+      // localStorage gracefully guarded
     }
   }, []);
 
@@ -57,15 +78,14 @@ export default function DinoGame() {
   // Main Canvas Render & Physics Animation Loop
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || !isVisible) return;
     const ctx = canvas.getContext('2d');
 
     let animationFrameId;
 
     const groundY = 150;
-    const dinoX = Math.round(canvas.width * 0.08); // 8% from left (72px)
+    const dinoX = Math.round(canvas.width * 0.08);
 
-    // Initialize background clouds
     const initClouds = () => {
       const clouds = [];
       for (let i = 0; i < 4; i++) {
@@ -77,7 +97,6 @@ export default function DinoGame() {
       stateRef.current.clouds = clouds;
     };
 
-    // Initialize ground pebbles
     const initPebbles = () => {
       const pebbles = [];
       for (let i = 0; i < 30; i++) {
@@ -120,7 +139,6 @@ export default function DinoGame() {
       };
     };
 
-    // Draw Background Clouds
     const drawClouds = (colors) => {
       ctx.fillStyle = colors.cloud;
       stateRef.current.clouds.forEach((cloud) => {
@@ -132,7 +150,6 @@ export default function DinoGame() {
       });
     };
 
-    // Draw Dino (Standing / Running / Ducking / Dead)
     const drawDino = (colors) => {
       const state = stateRef.current;
       const x = dinoX;
@@ -145,17 +162,15 @@ export default function DinoGame() {
       ctx.fillStyle = colors.onyx;
 
       if (isDucking && !isJumping) {
-        // DUCKING DINO (Height 20, Width 42)
-        ctx.fillRect(x + 20, y + 4, 20, 9); // Head
+        ctx.fillRect(x + 20, y + 4, 20, 9);
         ctx.fillStyle = colors.eye;
-        ctx.fillRect(x + 32, y + 6, 3, 3);  // Eye
+        ctx.fillRect(x + 32, y + 6, 3, 3);
         ctx.fillStyle = colors.onyx;
 
-        ctx.fillRect(x, y + 7, 26, 10);     // Body
-        ctx.fillRect(x - 4, y + 7, 5, 5);   // Tail
-        ctx.fillRect(x + 22, y + 12, 4, 3); // Arm
+        ctx.fillRect(x, y + 7, 26, 10);
+        ctx.fillRect(x - 4, y + 7, 5, 5);
+        ctx.fillRect(x + 22, y + 12, 4, 3);
 
-        // Legs animation
         if (legFrame % 2 === 0) {
           ctx.fillRect(x + 6, y + 17, 4, 3);
           ctx.fillRect(x + 18, y + 17, 4, 2);
@@ -166,11 +181,9 @@ export default function DinoGame() {
         return;
       }
 
-      // STANDING / RUNNING DINO (Height 32, Width 28)
       ctx.fillRect(x + 5, y + 9, 18, 16);
       ctx.fillRect(x + 14, y, 16, 14);
 
-      // Eye
       if (isDead) {
         ctx.fillStyle = colors.eye;
         ctx.fillRect(x + 22, y + 3, 2, 2);
@@ -184,10 +197,9 @@ export default function DinoGame() {
       }
 
       ctx.fillStyle = colors.onyx;
-      ctx.fillRect(x, y + 11, 6, 8);      // Tail
-      ctx.fillRect(x + 21, y + 14, 5, 3.5); // Arm
+      ctx.fillRect(x, y + 11, 6, 8);
+      ctx.fillRect(x + 21, y + 14, 5, 3.5);
 
-      // Legs Animation
       if (isJumping) {
         ctx.fillRect(x + 8, y + 25, 4, 7);
         ctx.fillRect(x + 17, y + 25, 4, 7);
@@ -202,12 +214,10 @@ export default function DinoGame() {
       }
     };
 
-    // Draw Obstacles (Small Cactus, Large Cactus, Pterodactyl Bird)
     const drawObstacle = (obs, colors) => {
       ctx.fillStyle = colors.onyx;
 
       if (obs.kind === 'bird') {
-        // PTERODACTYL
         const wingUp = Math.floor(stateRef.current.frameCount / 10) % 2 === 0;
         const x = obs.x;
         const y = obs.y;
@@ -227,7 +237,6 @@ export default function DinoGame() {
         return;
       }
 
-      // CACTI
       const isLarge = obs.kind === 'largeCactus';
       const height = obs.height;
       const count = obs.count || 1;
@@ -237,14 +246,12 @@ export default function DinoGame() {
         const cy = obs.y;
 
         if (isLarge) {
-          // Large Cactus (46px tall)
           ctx.fillRect(cx + 7, cy, 8, height);
           ctx.fillRect(cx, cy + 12, 8, 5);
           ctx.fillRect(cx, cy + 6, 5, 11);
           ctx.fillRect(cx + 14, cy + 18, 8, 5);
           ctx.fillRect(cx + 17, cy + 12, 5, 11);
         } else {
-          // Small Cactus (34px tall)
           ctx.fillRect(cx + 5, cy, 6, height);
           ctx.fillRect(cx, cy + 9, 6, 4);
           ctx.fillRect(cx, cy + 5, 4, 8);
@@ -260,7 +267,6 @@ export default function DinoGame() {
 
       const colors = getThemeColors();
 
-      // --- DRAW CLOUDS ---
       state.clouds.forEach((cloud) => {
         if (state.gameState === 'playing') {
           cloud.x -= state.speed * 0.25;
@@ -272,7 +278,6 @@ export default function DinoGame() {
       });
       drawClouds(colors);
 
-      // --- GROUND LINE ---
       ctx.strokeStyle = colors.groundLine;
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -280,7 +285,6 @@ export default function DinoGame() {
       ctx.lineTo(canvas.width, groundY);
       ctx.stroke();
 
-      // --- SCROLLING GROUND PEBBLES ---
       ctx.fillStyle = colors.groundDots;
       state.groundPebbles.forEach((p) => {
         if (state.gameState === 'playing') {
@@ -296,7 +300,6 @@ export default function DinoGame() {
         const currentScoreVal = Math.floor(state.score / 5);
         setScore(currentScoreVal);
 
-        // Level & Speed Progression
         const newLevel = Math.floor(currentScoreVal / 100) + 1;
         if (newLevel !== state.level) {
           state.level = newLevel;
@@ -304,17 +307,14 @@ export default function DinoGame() {
           setToast(`LEVEL UP! LEVEL ${newLevel}`);
         }
 
-        // Speed accelerates smoothly per level
         state.speed = Math.min(13.5, 6.0 + (state.level - 1) * 0.6);
 
-        // Milestone Toasts
         if (currentScoreVal === 100) setToast(EASTER_EGG_MESSAGES[0]);
         if (currentScoreVal === 250) setToast(EASTER_EGG_MESSAGES[1]);
         if (currentScoreVal === 450) setToast(EASTER_EGG_MESSAGES[2]);
         if (currentScoreVal === 700) setToast(EASTER_EGG_MESSAGES[3]);
 
-        // Dino Physics & Gravity
-        state.dinoVy += 0.62; // Gravity
+        state.dinoVy += 0.62;
         state.dinoY += state.dinoVy;
 
         const currentDinoHeight = state.isDucking && !state.isJumping ? 20 : 32;
@@ -330,14 +330,12 @@ export default function DinoGame() {
           state.legFrame = (state.legFrame + 1) % 2;
         }
 
-        // --- OBSTACLE SPAWNING (Starts after initial runway of 90 frames) ---
         const minGapPixels = 260 + Math.random() * 180;
         const lastObsX = state.obstacles.length > 0 ? state.obstacles[state.obstacles.length - 1].x : 0;
 
         if (state.frameCount > 90 && (state.obstacles.length === 0 || canvas.width - lastObsX >= minGapPixels)) {
           const rand = Math.random();
 
-          // Birds unlock at Level 2+ (Score >= 200)
           if (currentScoreVal >= 200 && rand > 0.65) {
             const altitudes = [groundY - 26, groundY - 48, groundY - 70];
             const altY = altitudes[Math.floor(Math.random() * altitudes.length)];
@@ -350,7 +348,6 @@ export default function DinoGame() {
               kind: 'bird',
             });
           } else if (rand > 0.35) {
-            // Large Cactus
             const count = Math.random() > 0.6 ? (Math.random() > 0.5 ? 3 : 2) : 1;
             const w = count * 24;
             state.obstacles.push({
@@ -362,7 +359,6 @@ export default function DinoGame() {
               kind: 'largeCactus',
             });
           } else {
-            // Small Cactus
             const count = Math.random() > 0.5 ? (Math.random() > 0.5 ? 3 : 2) : 1;
             const w = count * 16;
             state.obstacles.push({
@@ -376,12 +372,10 @@ export default function DinoGame() {
           }
         }
 
-        // --- OBSTACLE MOVEMENT & COLLISION DETECTION ---
         for (let i = state.obstacles.length - 1; i >= 0; i--) {
           const obs = state.obstacles[i];
           obs.x -= state.speed;
 
-          // Hitbox definition
           const dinoBox = state.isDucking && !state.isJumping
             ? {
                 x: dinoX + 4,
@@ -403,14 +397,12 @@ export default function DinoGame() {
             height: obs.height - 3,
           };
 
-          // AABB Intersection Test
           if (
             dinoBox.x < obsBox.x + obsBox.width &&
             dinoBox.x + dinoBox.width > obsBox.x &&
             dinoBox.y < obsBox.y + obsBox.height &&
             dinoBox.y + dinoBox.height > obsBox.y
           ) {
-            // GAME OVER
             setGameState('gameover');
             state.gameState = 'gameover';
             const finalScore = Math.floor(state.score / 5);
@@ -418,7 +410,11 @@ export default function DinoGame() {
             if (finalScore > state.highScore) {
               setHighScore(finalScore);
               state.highScore = finalScore;
-              localStorage.setItem('mj_dino_high_score', finalScore.toString());
+              try {
+                localStorage.setItem('mj_dino_high_score', finalScore.toString());
+              } catch {
+                // local storage safe
+              }
             }
           }
 
@@ -428,7 +424,6 @@ export default function DinoGame() {
         }
       }
 
-      // DRAW GAME CHARACTERS
       drawDino(colors);
       state.obstacles.forEach((obs) => drawObstacle(obs, colors));
 
@@ -441,9 +436,8 @@ export default function DinoGame() {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [gameState]);
+  }, [gameState, isVisible]);
 
-  // Jump Action Handler
   const triggerJump = () => {
     const state = stateRef.current;
     if (state.gameState === 'idle') {
@@ -472,21 +466,18 @@ export default function DinoGame() {
     }
   };
 
-  // Duck Action Handler
   const triggerDuck = (ducking) => {
     const state = stateRef.current;
     if (state.gameState === 'playing') {
       state.isDucking = ducking;
       setIsTouchDucking(ducking);
 
-      // Fast Drop if ducking mid-air
       if (ducking && state.isJumping) {
         state.dinoVy += 4.5;
       }
     }
   };
 
-  // Keyboard Event Listeners (Space/Up to Jump, Down/S to Duck)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') {
@@ -520,22 +511,25 @@ export default function DinoGame() {
 
   return (
     <div ref={containerRef} className="w-full max-w-full flex flex-col items-center">
-      {/* Game Card Container */}
+      {/* 
+        [AUDIT FIX: Standardized responsive container height]
+        Replaced invalid fractional Tailwind values h-48.25 and md:h-54.5 with standard units.
+      */}
       <div
         onClick={triggerJump}
         tabIndex={0}
         role="button"
         aria-label="Play endless dinosaur runner game"
-        className="relative w-full h-38 sm:h-48.25 md:h-54.5 lg:h-58 bg-surface border border-border-subtle rounded-3xl p-4 sm:p-6 shadow-sm flex flex-col justify-between overflow-hidden cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-700 hover:shadow-xl touch-none"
+        className="relative w-full h-40 sm:h-48 md:h-54 lg:h-58 bg-surface border border-border-subtle rounded-3xl p-3.5 sm:p-5 shadow-xs flex flex-col justify-between overflow-hidden cursor-pointer select-none focus:outline-none focus:ring-2 focus:ring-accent/20 transition-all duration-500 hover:shadow-xl touch-none"
       >
-        {/* Top Header Row: Title, Level & Scores */}
+        {/* Top Header Row */}
         <div className="flex items-center justify-between w-full z-10 text-[10px] sm:text-xs font-mono px-1 pointer-events-none">
           <div className="flex items-center gap-1.5 sm:gap-3">
             <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-bold uppercase tracking-wider text-onyx text-[10px] sm:text-xs transition-colors duration-700">
+            <span className="font-bold uppercase tracking-wider text-onyx text-[10px] sm:text-xs transition-colors duration-500">
               DINO RUNNER
             </span>
-            <span className="px-2 py-0.5 rounded-full bg-onyx/10 text-onyx text-[9px] sm:text-[10px] font-bold flex items-center gap-1 transition-colors duration-700">
+            <span className="px-2 py-0.5 rounded-full bg-onyx/10 text-onyx text-[9px] sm:text-[10px] font-bold flex items-center gap-1 transition-colors duration-500">
               <Zap size={10} className="text-accent" />
               LVL {level}
             </span>
@@ -543,25 +537,24 @@ export default function DinoGame() {
 
           <div className="flex items-center gap-3 sm:gap-5">
             {highScore > 0 && (
-              <span className="flex items-center gap-1 text-subtle transition-colors duration-700">
+              <span className="flex items-center gap-1 text-subtle transition-colors duration-500">
                 <Trophy size={13} className="text-amber-500 hidden sm:inline" />
                 <span>HI {highScore.toString().padStart(5, '0')}</span>
               </span>
             )}
-            <span className="font-bold text-onyx transition-colors duration-700">
+            <span className="font-bold text-onyx transition-colors duration-500">
               {score.toString().padStart(5, '0')}
             </span>
           </div>
         </div>
 
-        {/* Dynamic Milestone & Level Up Banner */}
+        {/* Milestone Banner */}
         {toast && (
-          <div className="absolute top-8 sm:top-10 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 bg-onyx text-porcelain text-[9px] sm:text-xs font-mono font-semibold rounded-full shadow-lg animate-bounce pointer-events-none whitespace-nowrap transition-colors duration-700">
+          <div className="absolute top-8 sm:top-10 left-1/2 -translate-x-1/2 z-20 px-3.5 py-1 bg-onyx text-porcelain text-[9px] sm:text-xs font-mono font-semibold rounded-full shadow-lg animate-bounce pointer-events-none whitespace-nowrap transition-colors duration-500">
             {toast}
           </div>
         )}
 
-        {/* High-Definition 900x180 Canvas */}
         <canvas
           ref={canvasRef}
           width={900}
@@ -569,26 +562,27 @@ export default function DinoGame() {
           className="w-full h-full object-fill pointer-events-none"
         />
 
-        {/* State Overlays */}
+        {/* Overlays */}
         {gameState === 'idle' && (
-          <div className="absolute inset-0 bg-surface/80 backdrop-blur-md flex flex-col items-center justify-center gap-1 sm:gap-1.5 z-20 pointer-events-none px-4 text-center transition-colors duration-700">
-            <span className="px-4 py-2 rounded-full bg-onyx text-porcelain text-[10px] sm:text-xs font-mono font-bold tracking-wider shadow-md transition-colors duration-700">
+          <div className="absolute inset-0 bg-surface/80 backdrop-blur-md flex flex-col items-center justify-center gap-1.5 z-20 pointer-events-none px-4 text-center transition-colors duration-500">
+            <span className="px-4 py-2 rounded-full bg-onyx text-porcelain text-[10px] sm:text-xs font-mono font-bold tracking-wider shadow-md transition-colors duration-500">
               Tap or Press Space to Run
             </span>
-            <span className="text-[9px] sm:text-xs font-mono text-subtle transition-colors duration-700">
+            <span className="text-[9px] sm:text-xs font-mono text-subtle transition-colors duration-500">
               Space / Up to Jump • Down Arrow to Duck
             </span>
           </div>
         )}
 
         {gameState === 'gameover' && (
-          <div className="absolute inset-0 bg-surface/85 backdrop-blur-md flex flex-col items-center justify-center gap-2.5 z-20 px-4 text-center transition-colors duration-700">
-            <div className="flex items-center gap-2 text-xs sm:text-sm font-mono font-bold text-onyx uppercase tracking-wider transition-colors duration-700">
+          <div className="absolute inset-0 bg-surface/85 backdrop-blur-md flex flex-col items-center justify-center gap-2.5 z-20 px-4 text-center transition-colors duration-500">
+            <div className="flex items-center gap-2 text-xs sm:text-sm font-mono font-bold text-onyx uppercase tracking-wider transition-colors duration-500">
               <span>GAME OVER</span>
               <span>•</span>
               <span>SCORE: {score}</span>
             </div>
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
                 triggerJump();
@@ -604,8 +598,9 @@ export default function DinoGame() {
 
       {/* Mobile Touch Action Controls Bar */}
       {gameState === 'playing' && (
-        <div className="mt-2.5 flex items-center justify-center gap-4 w-full sm:hidden z-10">
+        <div className="mt-2.5 flex items-center justify-center gap-3 w-full sm:hidden z-10">
           <button
+            type="button"
             onTouchStart={(e) => {
               e.preventDefault();
               triggerDuck(true);
@@ -614,18 +609,19 @@ export default function DinoGame() {
               e.preventDefault();
               triggerDuck(false);
             }}
-            className={`flex-1 py-2 rounded-xl border border-border-subtle text-xs font-mono font-bold uppercase flex items-center justify-center gap-1 ${
+            className={`flex-1 py-2.5 rounded-xl border border-border-subtle text-xs font-mono font-bold uppercase flex items-center justify-center gap-1 ${
               isTouchDucking ? 'bg-onyx text-porcelain' : 'bg-surface text-onyx'
             }`}
           >
             <ChevronDown size={14} /> DUCK
           </button>
           <button
+            type="button"
             onTouchStart={(e) => {
               e.preventDefault();
               triggerJump();
             }}
-            className="flex-1 py-2 rounded-xl bg-onyx text-porcelain text-xs font-mono font-bold uppercase flex items-center justify-center gap-1"
+            className="flex-1 py-2.5 rounded-xl bg-onyx text-porcelain text-xs font-mono font-bold uppercase flex items-center justify-center gap-1"
           >
             JUMP ⬆
           </button>
@@ -634,6 +630,3 @@ export default function DinoGame() {
     </div>
   );
 }
-
-
-

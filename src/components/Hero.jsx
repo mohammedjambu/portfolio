@@ -33,7 +33,11 @@ export default function Hero({ sectionRef }) {
     e.preventDefault();
     const element = document.getElementById("about");
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      if (window.__lenis) {
+        window.__lenis.scrollTo(element, { offset: -20 });
+      } else {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -41,56 +45,78 @@ export default function Hero({ sectionRef }) {
     <section
       id="home"
       ref={sectionRef}
-      className="relative min-h-screen pt-24 sm:pt-28 pb-8 md:pt-36 md:pb-12 flex flex-col justify-between bg-porcelain-100 transition-colors duration-500 overflow-x-clip"
+      className="relative min-h-[95dvh] pt-24 sm:pt-28 pb-4 md:pt-32 md:pb-6 flex flex-col justify-between bg-porcelain-100 transition-colors duration-500 overflow-x-clip"
     >
-      {/* Softer Subtle Background Grid */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.018] dark:opacity-[0.035] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-size-[4rem_4rem] transition-opacity duration-500"></div>
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.018] dark:opacity-[0.035] bg-[linear-gradient(to_right,#000_1px,transparent_1px),linear-gradient(to_bottom,#000_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] bg-[size:4rem_4rem] transition-opacity duration-500" />
 
-      <div className="max-w-[1800px] mx-auto px-4 sm:px-6 xl:px-8 2xl:px-24 w-full relative z-10 grow flex items-center justify-center">
+      {/* Hero Content Container */}
+      <div className="w-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grow flex items-center justify-center py-2 sm:py-4">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="w-full flex flex-col items-center"
+          className="w-full flex flex-col items-center justify-center"
         >
-          {/* Editorial Display Typography + Central Portrait Image Layout */}
-          <div className="relative w-full flex flex-col xl:flex-row items-center justify-center xl:justify-between gap-4 xl:gap-6 2xl:gap-8 my-4">
-            {/* Desktop Headline Left Component (Signature Name + FULL STACK) */}
+          {/* 
+            [AUDIT FIX: CENTERED EDITORIAL LOCKUP]
+            Removed xl:justify-between and flex-1 so elements don't fly to opposite screen edges.
+            Used tight, fluid gap-6 xl:gap-8 2xl:gap-12 to keep FULL STACK, the Image, and Developer close in the center.
+          */}
+          <div className="relative w-full flex flex-col xl:flex-row items-center justify-center gap-6 lg:gap-8 xl:gap-8 2xl:gap-12 my-auto">
+            
+            {/* --- LEFT HEADLINE COLUMN: FULL STACK --- */}
+            {/* [AUDIT FIX: xl:items-end ensures text snuggles up cleanly toward the central image] */}
             <motion.div
               variants={itemVariants}
-              className="text-center xl:text-left xl:flex-1 select-none flex flex-col items-center xl:items-start w-full xl:w-auto"
+              className="text-center xl:text-right select-none flex flex-col items-center xl:items-start justify-center shrink-0"
             >
-              {/* Signature Name Placement above FULL STACK */}
-              <div className="mb-2 sm:mb-3 text-[11px] sm:text-base md:text-lg font-mono font-semibold tracking-[0.2em] uppercase text-subtle xl:pl-4">
+              {/* Signature Name placement above FULL STACK */}
+              <div className="mb-2 sm:mb-1 text-[11px] sm:text-xs md:text-lg font-serif font-semibold tracking-[0.25em] uppercase text-subtle">
                 MOHAMMED JAMBUGHODA
               </div>
-              <h1 className="font-display uppercase text-5xl sm:text-7xl md:text-8xl xl:text-[clamp(3.5rem,5vw,7.5rem)] 2xl:text-[clamp(4.5rem,7vw,9rem)] tracking-tighter text-onyx leading-[0.8] whitespace-pre">
+
+              {/* [AUDIT FIX: leading-none matches Developer text height on the exact same horizontal line] */}
+              <h1 className="font-display uppercase text-5xl sm:text-7xl md:text-8xl xl:text-[clamp(3.8rem,5.2vw,7rem)] 2xl:text-[clamp(4.5rem,6.2vw,8.5rem)] tracking-tight text-onyx leading-none whitespace-normal xl:whitespace-nowrap">
                 FULL STACK
               </h1>
             </motion.div>
 
-            {/* Central Portrait Image Component (Single Continuous Image) */}
-            <div className="my-2 sm:my-4 xl:my-0 shrink-0 z-30">
+            {/* --- CENTRAL PORTRAIT IMAGE COMPONENT --- */}
+            <div className="shrink-0 z-30 my-1 sm:my-2 xl:my-0">
               <HeroImageTransition />
             </div>
 
-            {/* Desktop Headline Right Component (DEVELOPER + Description Copy & CTAs below it) */}
+            {/* --- RIGHT HEADLINE COLUMN: DEVELOPER + CTAs --- */}
+            {/* [AUDIT FIX: xl:items-start aligns text directly next to the central image] */}
             <motion.div
               variants={itemVariants}
-              className="text-center xl:text-left xl:flex-1 select-none flex flex-col items-center xl:items-start w-full xl:w-auto"
+              className="text-center xl:text-left select-none flex flex-col items-center xl:items-start justify-center shrink-0 max-w-sm sm:max-w-md xl:max-w-[420px]"
             >
-              <h1 className="font-serif italic text-6xl sm:text-8xl md:text-9xl xl:text-[clamp(4rem,6vw,8rem)] 2xl:text-[clamp(5rem,8.5vw,9rem)] font-normal tracking-tight text-accent leading-[0.85]">
+              {/* 
+                [AUDIT FIX: Alignment spacer on desktop matching the height of the signature tag on the left,
+                forcing "Developer" to line up horizontally on the exact same line as "FULL STACK"] 
+              */}
+              <div 
+                className="hidden xl:block mb-2 sm:mb-3 text-[11px] sm:text-xs md:text-sm font-mono tracking-[0.25em] opacity-0 select-none"
+                aria-hidden="true"
+              >
+                SPACER
+              </div>
+
+              {/* [AUDIT FIX: leading-none for horizontal line parity with FULL STACK] */}
+              <h1 className="font-serif italic text-6xl sm:text-8xl md:text-9xl xl:text-[clamp(4.2rem,5.8vw,7.6rem)] 2xl:text-[clamp(5rem,6.8vw,9rem)] font-normal tracking-tight text-accent leading-none">
                 Developer
               </h1>
 
-              {/* Supporting Description Copy & CTAs positioned directly below Developer text */}
-              <div className="mt-3 sm:mt-4 xl:mt-6 max-w-md flex flex-col items-center xl:items-start gap-4 sm:gap-5">
-                <p className="text-sm sm:text-base md:text-lg font-normal text-onyx leading-relaxed tracking-tight text-center xl:text-left">
+              {/* Supporting Description Copy & CTAs */}
+              <div className="mt-3 sm:mt-4 xl:mt-5 flex flex-col items-center xl:items-start gap-3 sm:gap-4">
+                <p className="text-sm sm:text-base font-normal text-onyx leading-relaxed tracking-tight text-center xl:text-left max-w-xs sm:max-w-sm">
                   I take an idea, shape the experience, and build everything
                   that makes it come alive.
                 </p>
 
-                <div className="flex flex-wrap items-center justify-center xl:justify-start gap-3 sm:gap-3.5 pt-1 w-full sm:w-auto">
+                <div className="flex flex-wrap items-center justify-center xl:justify-start gap-3 pt-1 w-full sm:w-auto">
                   <MagneticButton
                     variant="primary"
                     href="#contact"
@@ -114,12 +140,13 @@ export default function Hero({ sectionRef }) {
                 </div>
               </div>
             </motion.div>
+
           </div>
         </motion.div>
       </div>
 
-      {/* Interactive Framer Marquee Ticker at bottom of Hero */}
-      <div className="w-full relative z-10 pt-6 sm:pt-10">
+      {/* Framer Marquee Ticker at base of Hero */}
+      <div className="w-full relative z-10 pt-4 sm:pt-6">
         <Ticker />
       </div>
     </section>

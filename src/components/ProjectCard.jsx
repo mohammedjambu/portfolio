@@ -6,16 +6,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import {
-  ArrowUpRight,
-  MapPin,
-  BookOpen,
-  Truck,
-  Sun,
-  Utensils,
-  Compass,
-  ExternalLink,
-} from "lucide-react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import MotionButton from "./Extras/MotionButton";
 
 function GithubIcon({ className = "w-4 h-4" }) {
@@ -35,235 +26,125 @@ function GithubIcon({ className = "w-4 h-4" }) {
   );
 }
 
+function formatDisplayUrl(url, fallback = "project.demo") {
+  if (!url) return fallback;
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname.replace(/^www\./, "");
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+  }
+}
+
+const PROJECT_IMAGE_MAP = {
+  solartile: "/images/projects/solartile.avif",
+  wanderlust: "/images/projects/wanderlust.avif",
+  restuara: "/images/projects/restaura.avif",
+  "green-cart-logistics": "/images/projects/greencart.jpg",
+  "blog-platform": "/images/projects/blog-platform.jpg",
+};
+
 /**
  * High-fidelity editorial project visual preview mockup
+ * Displays real project screenshot inside a refined responsive browser frame.
  */
 function ProjectVisualPreview({ project }) {
-  if (project.image) {
-    return (
-      <img
-        src={project.image}
-        alt={project.title}
-        className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
-      />
-    );
-  }
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  const imageSrc = project.image || PROJECT_IMAGE_MAP[project.id];
+  const displayUrl = formatDisplayUrl(
+    project.liveUrl || project.githubUrl,
+    `${project.id}.app`,
+  );
 
   return (
-    <div className="relative w-full h-full bg-[#0F1012] text-white p-3.5 sm:p-5 md:p-6 lg:p-7 flex flex-col justify-between overflow-hidden select-none">
-      {/* Editorial Browser Header */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-2 sm:pb-2.5 z-10 shrink-0">
+    <div className="relative w-full h-full bg-[#0D0E12] text-white flex flex-col justify-between overflow-hidden select-none">
+      {/* Editorial Browser Header Bar */}
+      <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-2.5 bg-[#14161B]/95 backdrop-blur-md border-b border-white/10 shrink-0 z-20">
+        {/* macOS Traffic Lights */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FF5F56]" />
-          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#FFBD2E]" />
-          <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#27C93F]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#FF5F56] shadow-[0_0_6px_rgba(255,95,86,0.35)]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E] shadow-[0_0_6px_rgba(255,189,46,0.35)]" />
+          <div className="w-2.5 h-2.5 rounded-full bg-[#27C93F] shadow-[0_0_6px_rgba(39,201,63,0.35)]" />
         </div>
-        <div className="bg-white/10 text-white/80 text-[9px] sm:text-[11px] font-mono px-2.5 py-0.5 sm:py-1 rounded-full flex items-center gap-1.5 max-w-[160px] sm:max-w-[240px] truncate border border-white/10">
+
+        {/* Clean URL Address Pill */}
+        <div className="bg-white/5 hover:bg-white/10 text-white/80 text-[10px] sm:text-[11px] font-mono px-2.5 sm:px-3 py-0.5 sm:py-1 rounded-full flex items-center gap-1.5 max-w-[170px] sm:max-w-[260px] truncate border border-white/10 shadow-inner transition-colors">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
-          <span className="truncate">
-            {project.liveUrl || project.githubUrl || "https://project.demo"}
+          <span className="truncate tracking-tight">{displayUrl}</span>
+        </div>
+
+        {/* Project Number / Counter */}
+        <div className="text-white/40 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest hidden sm:flex items-center gap-1">
+          <span>{project.number}</span>
+          <span className="text-white/20">/</span>
+          <span>05</span>
+        </div>
+      </div>
+
+      {/* Main Viewport: Real Project Screenshot */}
+      <div className="relative w-full flex-1 min-h-0 bg-[#08090B] overflow-hidden flex items-center justify-center">
+        {/* Ambient Gradient Glow from project theme */}
+        <div
+          className={`absolute inset-0 opacity-25 pointer-events-none bg-gradient-to-tr ${
+            project.themeGlow || "from-blue-500/20 to-indigo-500/20"
+          }`}
+        />
+
+        {/* Skeleton shimmer while loading */}
+        {!imgLoaded && !imgError && (
+          <div className="absolute inset-0 bg-white/[0.04] animate-pulse flex items-center justify-center">
+            <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">
+              Loading preview...
+            </span>
+          </div>
+        )}
+
+        {/* Real Screenshot */}
+        {imageSrc && !imgError ? (
+          <img
+            src={imageSrc}
+            alt={project.title}
+            onLoad={() => setImgLoaded(true)}
+            onError={() => setImgError(true)}
+            className={`w-full h-full object-cover object-top transition-all duration-700 ease-out group-hover:scale-[1.04] ${
+              imgLoaded ? "opacity-100" : "opacity-0"
+            }`}
+            loading="lazy"
+          />
+        ) : (
+          /* Graceful Fallback if image not available */
+          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center">
+            <span className="font-display font-medium text-lg uppercase text-white/90 mb-1">
+              {project.title}
+            </span>
+            <span className="font-mono text-xs text-white/50">
+              {project.category}
+            </span>
+          </div>
+        )}
+
+        {/* Top edge inner shadow for authentic screen bevel */}
+        <div className="absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-black/35 to-transparent pointer-events-none" />
+
+        {/* Bottom subtle gradient vignette */}
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none opacity-80 group-hover:opacity-40 transition-opacity duration-500" />
+
+        {/* Bottom Left: Category Badge */}
+        <div className="absolute bottom-2.5 left-2.5 sm:bottom-3 sm:left-3 z-10 pointer-events-none flex items-center gap-1.5">
+          <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-black/65 backdrop-blur-md border border-white/10 text-white/80 text-[9px] sm:text-[10px] font-mono uppercase tracking-wider">
+            {project.category}
           </span>
         </div>
-        <div className="text-white/40 text-[9px] sm:text-[10px] font-mono uppercase tracking-widest hidden sm:block">
-          {project.number} / 05
+
+        {/* Bottom Right: Hover Explore Indicator */}
+        <div className="absolute bottom-2.5 right-2.5 sm:bottom-3 sm:right-3 z-10 pointer-events-none flex items-center gap-1">
+          <div className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-black/65 backdrop-blur-md border border-white/10 text-white/90 text-[9px] sm:text-[10px] font-mono font-medium flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+            <span>Explore</span>
+            <ExternalLink className="w-2.5 h-2.5 text-accent" />
+          </div>
         </div>
-      </div>
-
-      {/* Dynamic Visual Centerpiece */}
-      <div className="relative my-auto py-2 sm:py-3 flex flex-col items-center justify-center grow">
-        <div
-          className={`absolute -top-10 -left-10 w-48 h-48 sm:w-60 sm:h-60 rounded-full blur-3xl opacity-25 bg-gradient-to-br ${project.themeGlow || "from-blue-500 to-indigo-500"}`}
-        />
-        <div
-          className={`absolute -bottom-10 -right-10 w-48 h-48 sm:w-60 sm:h-60 rounded-full blur-3xl opacity-25 bg-gradient-to-br ${project.themeGlow || "from-indigo-500 to-purple-500"}`}
-        />
-
-        {project.id === "solartile" && (
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
-            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
-                  <Sun className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-                </div>
-                <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
-                    SOLARTILE
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
-                    Solar Energy Platform
-                  </span>
-                </div>
-              </div>
-              <span className="text-[8px] sm:text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
-                Clean Energy
-              </span>
-            </div>
-            <div className="space-y-2">
-              <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 flex items-center justify-between">
-                <div>
-                  <div className="text-[11px] sm:text-xs font-semibold text-white/95">
-                    Solar Generation Insights
-                  </div>
-                  <div className="text-[9px] sm:text-[10px] text-white/50 font-mono mt-0.5">
-                    Optimal Output · 14.8 kWh / day
-                  </div>
-                </div>
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {project.id === "wanderlust" && (
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
-            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center shrink-0">
-                  <Compass className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400" />
-                </div>
-                <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
-                    WANDERLUST
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
-                    Travel & Rental Platform
-                  </span>
-                </div>
-              </div>
-              <span className="text-[8px] sm:text-[9px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full">
-                Interactive Map
-              </span>
-            </div>
-            <div className="space-y-2">
-              <div className="h-20 sm:h-24 md:h-28 rounded-lg sm:rounded-xl bg-gradient-to-br from-emerald-950/60 via-zinc-900 to-black border border-white/10 p-2.5 sm:p-3 flex flex-col justify-between relative overflow-hidden">
-                <div className="flex justify-between items-start relative z-10">
-                  <div className="flex items-center gap-1 text-[10px] sm:text-xs text-emerald-400 font-medium bg-black/60 px-2 py-0.5 rounded-full border border-white/10">
-                    <MapPin className="w-3 h-3" /> Kyoto, Japan
-                  </div>
-                  <span className="text-[9px] sm:text-[10px] bg-emerald-500/20 border border-emerald-500/30 px-1.5 py-0.5 rounded text-emerald-200 font-mono font-bold">
-                    $180 / night
-                  </span>
-                </div>
-                <div className="relative z-10">
-                  <div className="text-[11px] sm:text-xs md:text-sm font-semibold text-white/95 truncate">
-                    Modern Zen Temple Loft & Private Garden
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {project.id === "restuara" && (
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
-            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-rose-500/20 border border-rose-500/30 flex items-center justify-center shrink-0">
-                  <Utensils className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400" />
-                </div>
-                <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
-                    RESTUARA
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
-                    Cinematic Dining
-                  </span>
-                </div>
-              </div>
-              <span className="text-[8px] sm:text-[9px] font-mono bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full">
-                Atmosphere Web
-              </span>
-            </div>
-            <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 space-y-1.5">
-              <div className="flex justify-between items-center text-[10px] sm:text-xs">
-                <span className="text-white/90 font-medium truncate">
-                  Chef's Tasting Reservation
-                </span>
-                <span className="text-rose-300 font-mono text-[9px] bg-rose-400/20 border border-rose-400/30 px-2 py-0.5 rounded-full shrink-0 ml-2">
-                  Confirmed
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {project.id === "green-cart-logistics" && (
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
-            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-teal-500/20 border border-teal-500/30 flex items-center justify-center shrink-0">
-                  <Truck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-400" />
-                </div>
-                <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
-                    GREENCART
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
-                    Logistics Dispatch
-                  </span>
-                </div>
-              </div>
-              <span className="text-[8px] sm:text-[9px] font-mono bg-teal-500/20 text-teal-300 border border-teal-500/30 px-2 py-0.5 rounded-full">
-                Real-Time GPS
-              </span>
-            </div>
-            <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 space-y-2">
-              <div className="flex justify-between items-center text-[10px] sm:text-xs">
-                <span className="text-white/70 font-mono">Shipment #GC-88402</span>
-                <span className="text-teal-300 font-mono text-[9px] bg-teal-400/20 border border-teal-400/30 px-2 py-0.5 rounded-full">
-                  In Transit
-                </span>
-              </div>
-              <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-teal-400 h-full w-3/4" />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {project.id === "blog-platform" && (
-          <div className="w-full max-w-xs sm:max-w-sm md:max-w-md bg-white/5 border border-white/10 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-2xl relative z-10">
-            <div className="flex items-center justify-between mb-2.5 sm:mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-amber-500/20 border border-amber-500/30 flex items-center justify-center shrink-0">
-                  <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400" />
-                </div>
-                <div>
-                  <span className="font-semibold text-xs sm:text-sm tracking-wide text-white block leading-tight">
-                    BLOG PLATFORM
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] text-white/50 block font-mono">
-                    Content Studio
-                  </span>
-                </div>
-              </div>
-              <span className="text-[8px] sm:text-[9px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full">
-                MERN Stack
-              </span>
-            </div>
-            <div className="space-y-2">
-              <div className="bg-white/5 p-2.5 sm:p-3 rounded-lg sm:rounded-xl border border-white/10 flex items-center justify-between">
-                <div>
-                  <div className="text-[11px] sm:text-xs font-semibold text-white/95">
-                    Engineering Editorial Workflows
-                  </div>
-                  <div className="text-[9px] sm:text-[10px] text-white/50 font-mono mt-0.5">
-                    Draft saved · 1,420 words
-                  </div>
-                </div>
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Visual Footer */}
-      <div className="flex items-center justify-between text-[9px] sm:text-[10px] text-white/50 font-mono z-10 pt-1.5 sm:pt-2 border-t border-white/10 shrink-0">
-        <span className="tracking-widest uppercase">{project.category}</span>
-        <span className="text-white/80 flex items-center gap-1 font-medium group-hover:text-white transition-colors">
-          Explore Showcase <ExternalLink className="w-3 h-3" />
-        </span>
       </div>
     </div>
   );
@@ -276,8 +157,8 @@ export default function ProjectCard({ project, isActive }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useTransform(mouseY, [-180, 180], [4, -4]);
-  const rotateY = useTransform(mouseX, [-250, 250], [-4, 4]);
+  const rotateX = useTransform(mouseY, [-180, 180], [3.5, -3.5]);
+  const rotateY = useTransform(mouseX, [-250, 250], [-3.5, 3.5]);
 
   const springConfig = { stiffness: 300, damping: 28, mass: 0.4 };
   const cursorX = useSpring(mouseX, springConfig);
@@ -312,57 +193,60 @@ export default function ProjectCard({ project, isActive }) {
 
   return (
     <div
-      className={`relative w-full h-full flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-10 xl:gap-14 items-center select-none transition-all duration-700 ${
+      className={`relative w-full h-full flex flex-col lg:grid lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-8 xl:gap-12 items-center select-none transition-all duration-700 ${
         isActive
           ? "opacity-100 scale-100"
           : "opacity-35 scale-[0.96] blur-[1px] pointer-events-none"
       }`}
     >
-      {/* LEFT COLUMN: EDITORIAL METADATA & CONTENT */}
-      <div className="w-full lg:col-span-5 flex flex-col justify-between h-auto lg:h-full py-1 sm:py-2 order-1 lg:order-1">
-        {/* Top: Chapter, Category, Title, Tagline */}
-        <div className="space-y-1.5 sm:space-y-2 lg:space-y-3">
+      {/* 
+        LEFT COLUMN: EDITORIAL METADATA & CONTENT
+        [AUDIT FIX: Fluid font sizes & paddings preventing vertical overlap at 110% zoom]
+      */}
+      <div className="w-full lg:col-span-5 flex flex-col justify-center h-auto lg:h-full py-0.5 sm:py-1 order-1 lg:order-1">
+        <div className="space-y-1 sm:space-y-1.5 lg:space-y-2.5">
           <motion.div
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 8 }}
+            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 6 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-2 sm:gap-3"
+            className="flex items-center gap-2 sm:gap-2.5"
           >
-            <span className="font-mono text-xs sm:text-sm lg:text-base font-bold text-onyx">
+            <span className="font-mono text-xs sm:text-sm font-bold text-onyx">
               {project.number}
             </span>
-            <span className="w-6 sm:w-8 h-px bg-onyx/20" />
-            <span className="text-[9px] sm:text-[10px] lg:text-xs font-semibold tracking-[0.2em] text-subtle uppercase">
+            <span className="w-5 sm:w-6 h-px bg-onyx/20" />
+            <span className="text-[9px] sm:text-[10px] lg:text-[11px] font-semibold tracking-[0.2em] text-subtle uppercase">
               {project.category}
             </span>
           </motion.div>
 
+          {/* [AUDIT FIX: Fluid clamp preventing headline from bursting the top layout at 110% zoom] */}
           <motion.h3
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.5, y: isActive ? 0 : 10 }}
+            animate={{ opacity: isActive ? 1 : 0.5, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[clamp(1.5rem,3.2vw,3.25rem)] font-display font-medium uppercase tracking-tight text-onyx leading-[1.05]"
+            className="text-[clamp(3.35rem,2.4vw,2.75rem)] font-display font-base uppercase tracking-wide text-onyx leading-[1.08]"
           >
             {project.title}
           </motion.h3>
 
           <motion.p
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 10 }}
+            animate={{ opacity: isActive ? 1 : 0.4, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="font-serif italic text-sm sm:text-base lg:text-xl text-onyx/80 leading-snug py-0.5 sm:py-1"
+            className="font-serif italic text-xs sm:text-sm lg:text-base xl:text-lg text-onyx/80 leading-snug py-0.5"
           >
             "{project.tagline}"
           </motion.p>
         </div>
 
-        {/* Mobile Spacer (re-orders on mobile below visual) */}
-        <div className="hidden lg:flex flex-col space-y-4 lg:space-y-6 pt-4 border-t border-border-subtle mt-4 lg:mt-auto">
+        {/* Desktop Lower Narrative & Actions */}
+        <div className="hidden lg:flex flex-col space-y-3 xl:space-y-4 pt-3 xl:pt-4 border-t border-border-subtle mt-3 xl:mt-4">
           <motion.p
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 10 }}
+            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-xs sm:text-sm text-subtle leading-relaxed line-clamp-3 max-w-md"
+            className="text-xs xl:text-sm text-subtle leading-relaxed line-clamp-3 max-w-md"
           >
             {project.description}
           </motion.p>
@@ -370,13 +254,13 @@ export default function ProjectCard({ project, isActive }) {
           {/* Tech Tags */}
           <motion.div
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 8 }}
+            animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 6 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap items-center gap-1.5 lg:gap-2 text-[10px] sm:text-xs font-mono font-medium text-subtle"
+            className="flex flex-wrap items-center gap-1.5 text-[10px] xl:text-[11px] font-mono font-medium text-subtle"
           >
             {project.technologies.map((tech, idx) => (
               <React.Fragment key={idx}>
-                <span className="bg-onyx/5 border border-border-subtle px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[10px] sm:text-[11px] transition-colors duration-700">
+                <span className="bg-onyx/5 border border-border-subtle px-2 py-0.5 rounded-md transition-colors duration-500">
                   {tech}
                 </span>
                 {idx < project.technologies.length - 1 && (
@@ -389,9 +273,9 @@ export default function ProjectCard({ project, isActive }) {
           {/* Action Links */}
           <motion.div
             initial={false}
-            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 8 }}
+            animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 6 }}
             transition={{ duration: 0.6, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-3 sm:gap-4 flex-wrap pt-1"
+            className="flex items-center gap-2.5 sm:gap-3 flex-wrap pt-0.5"
           >
             {project.liveUrl ? (
               <MotionButton
@@ -400,13 +284,13 @@ export default function ProjectCard({ project, isActive }) {
                 rel="noopener noreferrer"
                 variant="primary"
                 size="xs"
-                className="px-4 py-2 sm:px-5 sm:py-2.5 text-[11px] sm:text-xs"
+                className="px-3.5 py-1.5 xl:px-4 xl:py-2 text-[10.5px] xl:text-[11px]"
                 icon={<ArrowUpRight className="w-3.5 h-3.5" />}
               >
                 Live Demo
               </MotionButton>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-onyx/5 text-subtle text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-not-allowed">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-onyx/5 text-subtle text-[10px] font-bold uppercase tracking-wider cursor-not-allowed">
                 Internal Build
               </span>
             )}
@@ -418,14 +302,14 @@ export default function ProjectCard({ project, isActive }) {
                 rel="noopener noreferrer"
                 variant="secondary"
                 size="xs"
-                className="px-4 py-2 sm:px-5 sm:py-2.5 text-[11px] sm:text-xs"
+                className="px-3.5 py-1.5 xl:px-4 xl:py-2 text-[10.5px] xl:text-[11px]"
                 icon={<ArrowUpRight className="w-3.5 h-3.5" />}
               >
-                <GithubIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <GithubIcon className="w-3.5 h-3.5" />
                 <span>Source</span>
               </MotionButton>
             ) : (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-onyx/5 text-subtle text-[10px] sm:text-xs font-bold uppercase tracking-wider cursor-not-allowed">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-onyx/5 text-subtle text-[10px] font-bold uppercase tracking-wider cursor-not-allowed">
                 Source Private
               </span>
             )}
@@ -433,7 +317,10 @@ export default function ProjectCard({ project, isActive }) {
         </div>
       </div>
 
-      {/* RIGHT COLUMN: PROJECT VISUAL MOCKUP + 3D TILT */}
+      {/* 
+        RIGHT COLUMN: PROJECT VISUAL MOCKUP + 3D TILT
+        [AUDIT FIX: max-h-[min(350px,44vh)] prevents the mockup from forcing the viewport open and clipping at 110% zoom]
+      */}
       <div className="w-full lg:col-span-7 flex items-center justify-center perspective-[1000px] order-2 lg:order-2">
         <motion.div
           ref={visualRef}
@@ -446,7 +333,7 @@ export default function ProjectCard({ project, isActive }) {
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
           onClick={handleVisualClick}
-          className="relative w-full aspect-[16/10] max-w-[440px] sm:max-w-[540px] lg:max-w-none rounded-2xl md:rounded-3xl overflow-hidden border border-border-subtle shadow-xl lg:shadow-2xl bg-surface cursor-pointer group transition-all duration-700 hover:shadow-2xl"
+          className="relative w-full max-h-[min(300px,44vh)] aspect-[16/10] max-w-[420px] sm:max-w-[480px] lg:max-w-none rounded-2xl md:rounded-3xl overflow-hidden border border-border-subtle shadow-xl lg:shadow-2xl bg-surface cursor-pointer group transition-all duration-700 hover:shadow-2xl"
         >
           <ProjectVisualPreview project={project} />
 
@@ -457,7 +344,7 @@ export default function ProjectCard({ project, isActive }) {
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
                 style={{
                   x: cursorX,
                   y: cursorY,
@@ -465,7 +352,7 @@ export default function ProjectCard({ project, isActive }) {
                   top: "50%",
                   transform: "translate(-50%, -50%)",
                 }}
-                className="hidden lg:flex absolute pointer-events-none z-30 w-20 h-20 rounded-full bg-onyx text-porcelain shadow-2xl border border-border-subtle flex-col items-center justify-center text-center select-none"
+                className="hidden lg:flex absolute pointer-events-none z-30 w-18 h-18 rounded-full bg-onyx text-porcelain shadow-2xl border border-border-subtle flex-col items-center justify-center text-center select-none"
               >
                 <span className="font-sans text-[9px] font-bold tracking-[0.2em] uppercase leading-tight">
                   VIEW
@@ -477,26 +364,31 @@ export default function ProjectCard({ project, isActive }) {
         </motion.div>
       </div>
 
-      {/* MOBILE LOWER CONTENT (rendered only on small screens below visual) */}
-      <div className="w-full flex lg:hidden flex-col space-y-3 pt-2 mt-4 border-t border-border-subtle order-3">
-        <p className="text-xs text-subtle leading-relaxed line-clamp-2">
+      {/* MOBILE LOWER CONTENT (Compact layout so all elements remain in-frame on phones) */}
+      <div className="w-full flex lg:hidden flex-col space-y-2 pt-2 border-t border-border-subtle order-3">
+        <p className="text-[11px] sm:text-xs text-subtle leading-relaxed line-clamp-2">
           {project.description}
         </p>
 
         {/* Tech Tags */}
-        <div className="flex flex-wrap items-center gap-1.5 text-[10px] my-4 font-mono font-medium text-subtle">
-          {project.technologies.map((tech, idx) => (
+        <div className="flex flex-wrap items-center gap-1 text-[9px] sm:text-[10px] font-mono font-medium text-subtle py-0.5">
+          {project.technologies.slice(0, 4).map((tech, idx) => (
             <span
               key={idx}
-              className="bg-onyx/5 border border-border-subtle px-2 py-0.5 rounded-md text-[10px]"
+              className="bg-onyx/5 border border-border-subtle px-1.5 py-0.5 rounded-md"
             >
               {tech}
             </span>
           ))}
+          {project.technologies.length > 4 && (
+            <span className="text-subtle/50 text-[9px]">
+              +{project.technologies.length - 4}
+            </span>
+          )}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2.5 flex-wrap pt-0.5">
+        <div className="flex items-center gap-2 flex-wrap pt-0.5">
           {project.liveUrl && (
             <MotionButton
               href={project.liveUrl}
@@ -504,7 +396,7 @@ export default function ProjectCard({ project, isActive }) {
               rel="noopener noreferrer"
               variant="primary"
               size="xs"
-              className="px-3.5 py-1.5 text-[11px]"
+              className="px-3 py-1 text-[10.5px]"
               icon={<ArrowUpRight className="w-3 h-3" />}
             >
               Live Demo
@@ -518,7 +410,7 @@ export default function ProjectCard({ project, isActive }) {
               rel="noopener noreferrer"
               variant="secondary"
               size="xs"
-              className="px-3.5 py-1.5 text-[11px]"
+              className="px-3 py-1 text-[10.5px]"
               icon={<ArrowUpRight className="w-3 h-3" />}
             >
               <GithubIcon className="w-3 h-3" />

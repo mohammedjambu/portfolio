@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { ArrowUp, ArrowRight, ArrowUpRight } from 'lucide-react';
 import DinoGame from './DinoGame';
 import { scrollToSection } from '../utils/scrollToSection';
-
 import Signature from '../utils/Signature';
 
 const GithubIcon = ({ className = "w-3.5 h-3.5" }) => (
@@ -38,13 +37,14 @@ const MailIcon = ({ className = "w-3.5 h-3.5" }) => (
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', href: 'https://github.com/mohammedjambu', icon: GithubIcon },
-  { label: 'LinkedIn', href: 'https://linkedin.com', icon: LinkedinIcon },
-  { label: 'Instagram', href: 'https://instagram.com', icon: InstagramIcon },
+  { label: 'LinkedIn', href: 'https://linkedin.com/in/mohammedjambu', icon: LinkedinIcon },
+  { label: 'Instagram', href: 'https://instagram.com/', icon: InstagramIcon },
   { label: 'Email', href: 'mailto:mohammedjambughoda12@gmail.com', icon: MailIcon },
 ];
 
 const NAV_LINKS = [
-  // { label: 'About', href: '#about' },
+  { label: 'Home', href: '#home' },
+  { label: 'About', href: '#about' },
   { label: 'Services', href: '#services' },
   { label: 'Projects', href: '#projects' },
   { label: 'Tech Stack', href: '#tech' },
@@ -76,46 +76,48 @@ export default function Footer() {
   return (
     <footer
       id="footer"
-      className="relative bg-porcelain text-onyx pt-20 pb-8 overflow-hidden border-t border-border-subtle transition-colors duration-700"
+      className="relative bg-porcelain text-onyx pt-16 sm:pt-20 pb-8 overflow-hidden border-t border-border-subtle transition-colors duration-700"
     >
-      {/* Dynamic radial texture using var(--onyx) */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.015] bg-[radial-gradient(var(--onyx)_1px,transparent_1px)] bg-size-[24px_24px]" />
+      {/* Background Dot Texture */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.018] bg-[radial-gradient(var(--onyx)_1px,transparent_1px)] bg-[size:24px_24px]" />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 relative z-10">
         <motion.div
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-50px' }}
           variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 items-start pb-8 border-b border-border-subtle"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 sm:gap-12 lg:gap-16 items-start pb-8 border-b border-border-subtle"
         >
-          {/* BRAND */}
+          {/* BRAND COLUMN */}
           <motion.div variants={itemVariants} className="lg:col-span-5 flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-onyx text-porcelain border border-border-subtle flex items-center justify-center text-[14px] font-mono font-bold tracking-wider transition-colors duration-700 shrink-0">
+              <div className="w-8 h-8 rounded-full bg-onyx text-porcelain border border-border-subtle flex items-center justify-center text-[13px] font-mono font-bold tracking-wider transition-colors duration-700 shrink-0">
                 MJ
               </div>
-              <div className="w-full max-w-[320px] sm:max-w-105 text-onyx">
+              {/* [AUDIT FIX: Replaced invalid sm:max-w-105 with standard sm:max-w-[420px]] */}
+              <div className="w-full max-w-[280px] sm:max-w-[420px] text-onyx">
                 <Signature />
               </div>
             </div>
-            <span className="font-mono text-sm text-subtle tracking-widest uppercase pl-0.5">
+            <span className="font-mono text-xs sm:text-sm text-subtle tracking-widest uppercase pl-0.5">
               Full-Stack Developer
             </span>
-            <p className="text-md text-subtle tracking-wider leading-relaxed max-w-sm font-normal pt-0.5">
+            {/* [AUDIT FIX: Replaced invalid text-md with text-sm sm:text-base] */}
+            <p className="text-sm sm:text-base text-subtle tracking-wide leading-relaxed max-w-sm font-normal pt-0.5">
               Building thoughtful digital products where clean interfaces meet solid engineering.
             </p>
-            <div className="pt-1">
-              <span className="text-sm font-mono text-subtle inline-flex items-center gap-2">
+            <div className="pt-0.5">
+              <span className="text-xs sm:text-sm font-mono text-subtle inline-flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 Dahod, Gujarat, India
               </span>
             </div>
           </motion.div>
 
-          {/* NAVIGATION (TWO COLUMNS) */}
-          <motion.div variants={itemVariants} className="lg:col-span-3 flex flex-col gap-4">
-            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle/50 uppercase block">
+          {/* NAVIGATION LINKS */}
+          <motion.div variants={itemVariants} className="lg:col-span-3 flex flex-col gap-3 sm:gap-4">
+            <span className="text-xs sm:text-[13px] font-mono font-semibold tracking-[0.25em] text-subtle uppercase block">
               Explore
             </span>
             <nav className="grid grid-cols-2 gap-x-6 gap-y-2.5">
@@ -124,21 +126,22 @@ export default function Footer() {
                   key={link.label}
                   href={link.href}
                   onClick={(e) => handleNavClick(e, link.href)}
-                  className="group flex items-center justify-between py-0.5 text-md font-medium text-subtle hover:text-onyx transition-colors duration-300 w-fit"
+                  /* [AUDIT FIX: Replaced invalid text-md with text-sm sm:text-base] */
+                  className="group flex items-center justify-between py-0.5 text-sm sm:text-base font-medium text-subtle hover:text-onyx transition-colors duration-300 w-fit"
                 >
-                  <span className="relative transition-transform duration-300 group-hover:translate-x-1.5 pb-0.5">
+                  <span className="relative transition-transform duration-300 group-hover:translate-x-1 pb-0.5">
                     {link.label}
                     <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                   </span>
-                  <ArrowRight size={14} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-1 transition-all duration-300 ml-1.5" />
+                  <ArrowRight size={13} className="opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300 ml-1" />
                 </a>
               ))}
             </nav>
           </motion.div>
 
-          {/* ELSEWHERE */}
-          <motion.div variants={itemVariants} className="lg:col-span-4 flex flex-col gap-4">
-            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle/50 uppercase block">
+          {/* ELSEWHERE LINKS */}
+          <motion.div variants={itemVariants} className="lg:col-span-4 flex flex-col gap-3 sm:gap-4">
+            <span className="text-xs sm:text-[13px] font-mono font-semibold tracking-[0.25em] text-subtle uppercase block">
               Elsewhere
             </span>
             <div className="flex flex-col gap-2.5">
@@ -150,14 +153,14 @@ export default function Footer() {
                     href={social.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 text-xs sm:text-lg font-mono text-subtle hover:text-onyx transition-colors duration-300 w-fit"
+                    className="group inline-flex items-center gap-2 text-sm sm:text-base font-mono text-subtle hover:text-onyx transition-colors duration-300 w-fit"
                   >
-                    <IconComponent className="w-3.5 h-3.5 transition-colors duration-300" />
-                    <span className="relative transition-transform duration-300 group-hover:translate-x-0.5 pb-0.5">
+                    <IconComponent className="w-3.5 h-3.5 transition-colors duration-300 shrink-0" />
+                    <span className="relative transition-transform duration-300 group-hover:translate-x-1 pb-0.5">
                       {social.label}
                       <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-current origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
                     </span>
-                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300" />
+                    <ArrowUpRight size={12} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0" />
                   </a>
                 );
               })}
@@ -165,17 +168,17 @@ export default function Footer() {
           </motion.div>
         </motion.div>
 
-        {/* EASTER EGG */}
+        {/* EASTER EGG SECTION */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-40px' }}
           transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="my-8 w-full flex flex-col items-center gap-4"
+          className="my-8 w-full flex flex-col items-center gap-3.5"
         >
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-onyx transition-colors duration-700" />
-            <span className="text-[14px] font-mono font-semibold tracking-[0.25em] text-subtle uppercase">
+            <span className="text-xs sm:text-[13px] font-mono font-semibold tracking-[0.25em] text-subtle uppercase">
               Need a break?
             </span>
             <span className="w-1.5 h-1.5 rounded-full bg-onyx transition-colors duration-700" />
@@ -183,19 +186,22 @@ export default function Footer() {
           <DinoGame />
         </motion.div>
 
-        {/* BOTTOM BAR */}
-        <div className="border-t border-border-subtle pt-8 pb-4 flex flex-col md:flex-row items-center justify-between gap-4 text-xs font-mono text-subtle">
+        {/* BOTTOM COPYRIGHT BAR */}
+        <div className="border-t border-border-subtle pt-6 pb-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono text-subtle">
           <div className="flex items-center gap-2">
-            <span>© 2026 Mohammed Jambughoda</span>
+            <span>© {new Date().getFullYear()} Mohammed Jambughoda</span>
             <span>•</span>
             <span>Full-Stack Developer</span>
           </div>
-          <div className="text-onyx/80 hidden sm:block">
+          <div className="text-onyx/75 hidden sm:block">
             Built to be useful. Designed to be remembered.
           </div>
+          {/* [AUDIT FIX: Added type="button"] */}
           <button
+            type="button"
             onClick={scrollToTop}
-            className="group inline-flex items-center gap-2 text-xs font-mono font-medium uppercase tracking-wider text-subtle hover:text-onyx transition-colors duration-300 cursor-pointer"
+            aria-label="Scroll back to top of page"
+            className="group inline-flex items-center gap-1.5 text-xs font-mono font-medium uppercase tracking-wider text-subtle hover:text-onyx transition-colors duration-300 cursor-pointer"
           >
             <span className="relative pb-0.5">
               Back to top

@@ -1,51 +1,128 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 
 export default function HeroImageTransition() {
-  const [isMobile, setIsMobile] = useState(false);
+  const containerRef = useRef(null);
+
+  // Live coordinates dynamically calculated from DOM anchors
+  const [offsets, setOffsets] = useState({
+    targetY: 820,
+    targetX: 300,
+    scrollTarget: 900,
+    isDesktop: false,
+  });
+
+  const updateOffsets = () => {
+    if (!containerRef.current) return;
+
+    const isDesktopLayout = window.innerWidth >= 1024; // Synchronized with About.jsx lg: breakpoint
+    const anchorId = isDesktopLayout
+      ? "about-image-desktop-anchor"
+      : "about-image-mobile-anchor";
+
+    const anchorEl = document.getElementById(anchorId);
+    const aboutSection = document.getElementById("about");
+
+    if (anchorEl && containerRef.current) {
+      const heroCardRect = containerRef.current.getBoundingClientRect();
+      const anchorRect = anchorEl.getBoundingClientRect();
+
+      // [AUDIT FIX: Exact live delta calculation immune to 110-150% zoom and mobile screen heights]
+      const deltaY = anchorRect.top - heroCardRect.top;
+      const deltaX = isDesktopLayout ? anchorRect.left - heroCardRect.left : 0;
+
+      const currentScroll = window.scrollY || window.pageYOffset;
+      const scrollTriggerDistance = aboutSection
+        ? Math.max(500, aboutSection.offsetTop - window.innerHeight * 0.25)
+        : 850;
+
+      setOffsets({
+        targetY: deltaY,
+        targetX: deltaX,
+        scrollTarget: scrollTriggerDistance,
+        isDesktop: isDesktopLayout,
+      });
+    }
+  };
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    updateOffsets();
+
+    // Recompute on window resize, zoom change, or orientation change
+    window.addEventListener("resize", updateOffsets);
+    window.addEventListener("scroll", updateOffsets, { once: true });
+
+    // Slight delay to allow DOM font and image layout settling
+    const timer = setTimeout(updateOffsets, 350);
+
+    return () => {
+      window.removeEventListener("resize", updateOffsets);
+      window.removeEventListener("scroll", updateOffsets);
+      clearTimeout(timer);
+    };
   }, []);
 
   const { scrollY } = useScroll();
 
   const smoothScrollY = useSpring(scrollY, {
     stiffness: 110,
-    damping: 22,
-    mass: 0.15,
+    damping: 24,
+    mass: 0.16,
     restDelta: 0.0001,
   });
 
-  const yDesktop = useTransform(smoothScrollY, [0, 800], ["0px", "850px"]);
-  const xDesktop = useTransform(smoothScrollY, [0, 700], ["0px", "400px"]);
-  const scaleDesktop = useTransform(smoothScrollY, [0, 800], [1, 0.95]);
+  // [AUDIT FIX: Transforms bound directly to dynamically computed offsets]
+  const y = useTransform(
+    smoothScrollY,
+    [0, offsets.scrollTarget],
+    [0, offsets.targetY],
+    { clamp: true }
+  );
 
-  const yMobile = useTransform(smoothScrollY, [0, 800], ["0px", "850px"]);
-  const scaleMobile = useTransform(smoothScrollY, [0, 800], [1, 0.9]);
+  const x = useTransform(
+    smoothScrollY,
+    [0, offsets.scrollTarget * 0.85],
+    [0, offsets.targetX],
+    { clamp: true }
+  );
 
-  const y = isMobile ? yMobile : yDesktop;
-  const x = isMobile ? "0px" : xDesktop;
-  const scale = isMobile ? scaleMobile : scaleDesktop;
+  const scale = useTransform(
+    smoothScrollY,
+    [0, offsets.scrollTarget],
+    [1, offsets.isDesktop ? 0.95 : 0.88],
+    { clamp: true }
+  );
 
-  const rotateY = useTransform(smoothScrollY, [0, 600], [0, 180]);
-  const borderRadius = useTransform(smoothScrollY, [0, 600], ["32px", "40px"]);
+  // 3D rotation flip: active on both mobile and desktop
+  const rotateY = useTransform(
+    smoothScrollY,
+    [offsets.scrollTarget * 0.15, offsets.scrollTarget * 0.85],
+    [0, 180],
+    { clamp: true }
+  );
 
-  // Shadow is updated to be slightly deeper for dark mode environments
+  const borderRadius = useTransform(
+    smoothScrollY,
+    [0, offsets.scrollTarget * 0.75],
+    ["28px", "36px"],
+    { clamp: true }
+  );
+
   const shadow = useTransform(
     smoothScrollY,
-    [0, 650],
+    [0, offsets.scrollTarget * 0.8],
     [
-      "0 30px 60px -12px rgba(0,0,0,0.25)",
-      "0 15px 30px -10px rgba(0,0,0,0.35)",
-    ],
+      "0 20px 40px -10px rgba(0,0,0,0.22)",
+      "0 10px 24px -8px rgba(0,0,0,0.30)",
+    ]
   );
 
   return (
-    <div className="relative z-30 flex justify-center items-center pointer-events-auto perspective-[1400px]">
+    <div
+      ref={containerRef}
+      className="relative z-30 flex justify-center items-center pointer-events-auto"
+      style={{ perspective: 1400 }}
+    >
       <motion.div
         style={{
           y,
@@ -57,33 +134,51 @@ export default function HeroImageTransition() {
           transformStyle: "preserve-3d",
           willChange: "transform",
         }}
-        initial={{ opacity: 0, scale: 1.08 }}
+        initial={{ opacity: 0, scale: 1.05 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{
-          duration: 1.4,
+          duration: 1.1,
           ease: [0.16, 1, 0.3, 1],
-          delay: 0.5,
+          delay: 0.25,
         }}
         className="group relative cursor-pointer selection:bg-none rounded-[inherit]"
       >
-        <div className="relative w-60 sm:w-70 md:w-[320px] lg:w-85 xl:w-90 aspect-4/5 rounded-[inherit] transform-3d">
-          {/* FRONT FACE */}
-          <div className="absolute inset-0 w-full h-full backface-hidden rounded-[inherit] overflow-hidden border border-border-subtle bg-surface transition-colors duration-700">
+        {/* Card dimensions responsive from mobile (210px) to wide screens (310px) */}
+        <div
+          className="relative w-[250px] sm:w-[250px] md:w-[270px] lg:w-[270px] xl:w-[290px] 2xl:w-[350px] aspect-4/5 rounded-[inherit]"
+          style={{ transformStyle: "preserve-3d" }}
+        >
+          {/* FRONT FACE (Hero Portrait: Mountain/Lake) */}
+          <div
+            className="absolute inset-0 w-full h-full rounded-[inherit] overflow-hidden border border-border-subtle bg-surface transition-colors duration-700"
+            style={{
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }}
+          >
             <img
               src="/images/myimage.jpg"
-              alt="Hero Portrait"
-              className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-110 pointer-events-none"
+              alt="Mohammed Jambughoda portrait"
+              className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-105 pointer-events-none"
+              loading="eager"
             />
-            {/* Subtle overlay */}
             <div className="absolute inset-0 bg-onyx/5 pointer-events-none" />
           </div>
 
-          {/* BACK FACE */}
-          <div className="absolute inset-0 w-full h-full backface-hidden transform-[rotateY(180deg)] rounded-[inherit] overflow-hidden border border-border-subtle bg-surface transition-colors duration-700">
+          {/* BACK FACE (About Portrait: Workspace/Suit) */}
+          <div
+            className="absolute inset-0 w-full h-full rounded-[inherit] overflow-hidden border border-border-subtle bg-surface transition-colors duration-700"
+            style={{
+              transform: "rotateY(180deg)",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }}
+          >
             <img
               src="/images/profile_about.jpg"
-              alt="About Portrait"
-              className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-110 pointer-events-none"
+              alt="Mohammed Jambughoda - About"
+              className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-105 pointer-events-none"
+              loading="lazy"
             />
           </div>
         </div>
