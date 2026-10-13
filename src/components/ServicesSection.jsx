@@ -193,11 +193,11 @@ export default function ServicesSection() {
           </div>
 
           {/* RIGHT: PROGRESSIVE CAPABILITIES LIST */}
-          <div className="lg:col-span-7 flex flex-col justify-center w-full max-w-[360px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-none mx-auto lg:mx-0 shrink-0">
+          <div className="lg:col-span-7 flex flex-col justify-center w-full max-w-[340px] sm:max-w-[420px] md:max-w-[480px] lg:max-w-none mx-auto lg:mx-0 shrink-0">
             <div
               role="tablist"
               aria-label="Capabilities list"
-              className="flex flex-col gap-1 sm:gap-1.5 lg:gap-1.5 xl:gap-2 relative w-full"
+              className="flex flex-col gap-2 sm:gap-1.5 lg:gap-1.5 xl:gap-2 relative w-full"
             >
               {SERVICES_DATA.map((service, index) => {
                 const isActive = activeIndex === index;
@@ -246,7 +246,7 @@ export default function ServicesSection() {
                           ({service.id})
                         </span>
                         <h3
-                          className={`text-xs sm:text-base md:text-lg lg:text-lg xl:text-xl font-bold tracking-tight transition-colors duration-500 min-w-0 leading-snug break-words ${isActive ? "text-porcelain" : "text-onyx"}`}
+                          className={`text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl font-bold tracking-tight transition-colors duration-500 min-w-0 leading-snug break-words ${isActive ? "text-porcelain" : "text-onyx"}`}
                         >
                           {service.title}
                         </h3>
