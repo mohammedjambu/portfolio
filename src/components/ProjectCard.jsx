@@ -225,7 +225,7 @@ export default function ProjectCard({ project, isActive }) {
             initial={false}
             animate={{ opacity: isActive ? 1 : 0.5, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-            className="text-[clamp(3.35rem,2.4vw,2.75rem)] font-display font-base uppercase tracking-wide text-onyx leading-[1.08]"
+            className="text-[clamp(2.35rem,2.4vw,2.75rem)] font-display font-base uppercase tracking-wide text-onyx leading-[1.08]"
           >
             {project.title}
           </motion.h3>

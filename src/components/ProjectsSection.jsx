@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from 'framer-motion';
 import SectionLabel from '../utils/SectionLabel';
 import ProjectCard from './ProjectCard';
@@ -17,7 +17,6 @@ export const PROJECTS_DATA = [
     githubUrl: null,
     liveUrl: 'https://www.smartsolarsolution.in/',
     themeGlow: 'from-amber-500/20 to-yellow-600/20',
-    image: '/images/projects/solartile.avif',
   },
   {
     id: 'wanderlust',
@@ -30,7 +29,6 @@ export const PROJECTS_DATA = [
     githubUrl: 'https://github.com/mohammedjambu/WanderLust',
     liveUrl: 'https://wanderlust-ebon-iota.vercel.app/',
     themeGlow: 'from-emerald-500/20 to-teal-600/20',
-    image: '/images/projects/wanderlust.avif',
   },
   {
     id: 'restuara',
@@ -43,7 +41,6 @@ export const PROJECTS_DATA = [
     githubUrl: null,
     liveUrl: 'https://restaura-5ea34.netlify.app/',
     themeGlow: 'from-rose-500/20 to-red-600/20',
-    image: '/images/projects/restaura.avif',
   },
   {
     id: 'green-cart-logistics',
@@ -56,7 +53,6 @@ export const PROJECTS_DATA = [
     githubUrl: null,
     liveUrl: null,
     themeGlow: 'from-teal-500/20 to-cyan-600/20',
-    image: '/images/projects/greencart.jpg',
   },
   {
     id: 'blog-platform',
@@ -69,7 +65,6 @@ export const PROJECTS_DATA = [
     githubUrl: 'https://github.com/mohammedjambu/BlogPlatform',
     liveUrl: 'https://blog-platform-six-zeta.vercel.app/',
     themeGlow: 'from-amber-500/20 to-orange-600/20',
-    image: '/images/projects/blog-platform.jpg',
   },
 ];
 
@@ -82,7 +77,7 @@ export default function ProjectsSection() {
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
 
-  // Prefers-reduced-motion listener
+  // Prefers-reduced-motion detection
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     setPrefersReducedMotion(mediaQuery.matches);
@@ -99,24 +94,22 @@ export default function ProjectsSection() {
     };
   }, []);
 
-  // Isolated Scroll Progress tracking
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end end'],
   });
 
-  // Calculate dynamic horizontal translation distance
-  const updateTrackMeasurement = () => {
+  // [AUDIT FIX: Zoom-safe measurement listener calculating true scrollable delta]
+  const updateTrackMeasurement = useCallback(() => {
     if (trackRef.current && viewportRef.current) {
       const trackWidth = trackRef.current.scrollWidth;
       const viewportWidth = viewportRef.current.clientWidth;
       const travel = Math.max(0, trackWidth - viewportWidth);
       setMaxTranslate(travel);
     }
-  };
+  }, []);
 
-  // Center-detection for active project index
-  const updateActiveIndexFromTrack = () => {
+  const updateActiveIndexFromTrack = useCallback(() => {
     if (!trackRef.current) return;
     const cards = trackRef.current.children;
     if (!cards || cards.length === 0) return;
@@ -140,7 +133,7 @@ export default function ProjectsSection() {
     }
 
     setActiveProjectIndex((prev) => (prev !== closestIndex ? closestIndex : prev));
-  };
+  }, []);
 
   useEffect(() => {
     updateTrackMeasurement();
@@ -156,27 +149,30 @@ export default function ProjectsSection() {
     resizeObserver.observe(trackRef.current);
     resizeObserver.observe(viewportRef.current);
 
+    window.addEventListener('resize', updateTrackMeasurement);
+
     const timer = setTimeout(() => {
       updateTrackMeasurement();
       updateActiveIndexFromTrack();
-    }, 200);
+    }, 250);
 
     return () => {
       resizeObserver.disconnect();
+      window.removeEventListener('resize', updateTrackMeasurement);
       clearTimeout(timer);
     };
-  }, []);
+  }, [updateTrackMeasurement, updateActiveIndexFromTrack]);
 
-  // Smooth horizontal spring
-  const rawX = useTransform(scrollYProgress, [0.05, 0.95], [0, -maxTranslate]);
+  // Smooth horizontal translation spring
+  const rawX = useTransform(scrollYProgress, [0.04, 0.96], [0, -maxTranslate]);
   const smoothX = useSpring(rawX, {
     stiffness: 180,
     damping: 28,
     mass: 0.8,
   });
 
-  // Smooth progress width
-  const progressWidth = useTransform(scrollYProgress, [0.05, 0.95], ['0%', '100%']);
+  // Smooth progress bar width
+  const progressWidth = useTransform(scrollYProgress, [0.04, 0.96], ['0%', '100%']);
   const smoothProgressWidth = useSpring(progressWidth, {
     stiffness: 240,
     damping: 30,
@@ -189,19 +185,20 @@ export default function ProjectsSection() {
   const scrollToIndex = (targetIndex) => {
     if (!sectionRef.current) return;
     const boundedIndex = Math.max(0, Math.min(PROJECTS_DATA.length - 1, targetIndex));
-    const targetProgress = (boundedIndex / (PROJECTS_DATA.length - 1)) * 0.9 + 0.05;
+    const targetProgress = (boundedIndex / (PROJECTS_DATA.length - 1)) * 0.92 + 0.04;
 
     const sectionTop = sectionRef.current.offsetTop;
-    const sectionHeight = sectionRef.current.offsetHeight;
-    const viewportHeight = window.innerHeight;
-    const scrollableDistance = sectionHeight - viewportHeight;
-
+    const scrollableDistance = sectionRef.current.offsetHeight - window.innerHeight;
     const targetScrollY = sectionTop + targetProgress * scrollableDistance;
 
-    window.scrollTo({
-      top: targetScrollY,
-      behavior: 'smooth',
-    });
+    if (window.__lenis) {
+      window.__lenis.scrollTo(targetScrollY, { duration: 0.8 });
+    } else {
+      window.scrollTo({
+        top: targetScrollY,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
@@ -210,25 +207,29 @@ export default function ProjectsSection() {
       ref={sectionRef}
       className="relative bg-porcelain border-t border-border-subtle min-h-[400vh] transition-colors duration-700"
     >
-      {/* STICKY VIEWPORT CONTAINER (100svh for height-proof scaling) */}
+      {/* 
+        [AUDIT FIX: STICKY VIEWPORT CONTAINER (h-[100dvh] max-h-[100dvh])]
+        Replaced rigid pt-18/pt-16 and unchecked flex constraints.
+        Ensures header, horizontal card track, and footer controls remain 100% visible across 110%-150% zoom levels.
+      */}
       <div
         ref={viewportRef}
-        className="sticky top-0 h-[100svh] py-3 sm:py-5 lg:py-8 flex flex-col justify-between overflow-hidden select-none z-10"
+        className="sticky top-0 h-[100dvh] max-h-[100dvh] py-2 sm:py-3 lg:py-4 flex flex-col justify-between overflow-hidden select-none z-10"
       >
         {/* SECTION HEADER */}
         <motion.div
-          initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 w-full shrink-0 pt-16 sm:pt-18 md:pt-6 lg:pt-8"
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full shrink-0 pt-16 sm:pt-20 md:pt-4 lg:pt-5"
         >
-          <div className="flex items-end justify-between gap-4 sm:gap-6 border-b border-border-subtle pb-2.5 sm:pb-4 transition-colors duration-700">
+          <div className="flex items-end justify-between gap-4 border-b border-border-subtle pb-2 sm:pb-3 transition-colors duration-700">
             <div>
-              <div className="mb-1">
+              <div className="mb-0.5 sm:mb-1">
                 <SectionLabel number="04" title="SELECTED WORK" />
               </div>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl font-display font-medium uppercase tracking-tight text-onyx">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-medium uppercase tracking-tight text-onyx">
                 Selected <span className="font-serif text-accent italic font-normal">Work</span>
               </h2>
             </div>
@@ -239,19 +240,22 @@ export default function ProjectsSection() {
                 <span className="text-subtle/40">/</span>
                 <span className="text-subtle/60">05</span>
               </div>
-              <p className="text-xs sm:text-sm text-subtle max-w-xs font-normal leading-relaxed text-left hidden sm:block">
+              <p className="text-xs sm:text-sm text-subtle max-w-xs font-normal leading-relaxed text-right hidden sm:block">
                 Every project starts differently. What matters is turning the right idea into something useful and real.
               </p>
             </div>
           </div>
         </motion.div>
 
-        {/* MAIN HORIZONTAL TRACK */}
-        <div className="relative w-full flex-1 min-h-0 flex items-center overflow-hidden my-auto py-2">
+        {/* 
+          MAIN HORIZONTAL TRACK
+          [AUDIT FIX: flex-1 min-h-0 container guarantees children never burst vertical bounds]
+        */}
+        <div className="relative w-full flex-1 min-h-0 flex items-center overflow-hidden my-auto py-1 sm:py-2">
           <motion.div
             ref={trackRef}
             style={{ x: prefersReducedMotion ? 0 : smoothX }}
-            className="flex items-center gap-8 sm:gap-12 md:gap-16 lg:gap-24 pl-[6vw] pr-[6vw] sm:pl-[10vw] sm:pr-[10vw] md:pl-[14vw] md:pr-[14vw] lg:pl-[18vw] lg:pr-[18vw] w-max h-full py-1"
+            className="flex items-center gap-6 sm:gap-10 md:gap-14 lg:gap-20 pl-[6vw] pr-[6vw] sm:pl-[10vw] sm:pr-[10vw] md:pl-[14vw] md:pr-[14vw] lg:pl-[16vw] lg:pr-[16vw] w-max h-full py-1"
           >
             {PROJECTS_DATA.map((project, idx) => {
               const isActive = activeProjectIndex === idx;
@@ -259,7 +263,8 @@ export default function ProjectsSection() {
               return (
                 <div
                   key={project.id}
-                  className="w-[88vw] sm:w-[82vw] md:w-[74vw] lg:w-[64vw] max-w-[1120px] h-auto max-h-full shrink-0 flex flex-col justify-center my-auto"
+                  /* [AUDIT FIX: Fluid card slot with max-h-[min(540px,78vh)] preventing top/bottom clipping at 110% zoom] */
+                  className="w-[86vw] sm:w-[80vw] md:w-[72vw] lg:w-[65vw] xl:w-[60vw] max-w-[1080px] h-full max-h-[min(540px,78vh)] shrink-0 flex flex-col justify-center my-auto"
                 >
                   <ProjectCard
                     project={project}
@@ -272,9 +277,9 @@ export default function ProjectsSection() {
         </div>
 
         {/* FOOTER NAVIGATION */}
-        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 w-full shrink-0 flex items-center justify-between pt-2.5 sm:pt-3 border-t border-border-subtle text-xs text-subtle font-mono transition-colors duration-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full shrink-0 flex items-center justify-between pt-2 pb-2 sm:pb-3 border-t border-border-subtle text-xs text-subtle font-mono transition-colors duration-700">
           {/* Progress Line */}
-          <div className="flex items-center gap-3 sm:gap-4 flex-1 max-w-xs sm:max-w-sm">
+          <div className="flex items-center gap-2.5 sm:gap-3.5 flex-1 max-w-xs sm:max-w-sm">
             <span className="text-onyx font-bold text-xs">
               {PROJECTS_DATA[activeProjectIndex].number}
             </span>
@@ -299,7 +304,7 @@ export default function ProjectsSection() {
               disabled={activeProjectIndex === 0}
               variant="outline"
               size="xs"
-              className="px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs"
+              className="px-3 py-1 sm:px-3.5 sm:py-1.5 text-[10px] sm:text-xs"
               icon={<ChevronLeft className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
               iconPosition="left"
               aria-label="Previous project"
@@ -313,7 +318,7 @@ export default function ProjectsSection() {
               disabled={activeProjectIndex === PROJECTS_DATA.length - 1}
               variant="outline"
               size="xs"
-              className="px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs"
+              className="px-3 py-1 sm:px-3.5 sm:py-1.5 text-[10px] sm:text-xs"
               icon={<ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5" />}
               iconPosition="right"
               aria-label="Next project"
