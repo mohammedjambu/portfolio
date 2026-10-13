@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, ExternalLink, Lock, Globe, Sparkles } from "lucide-react";
+import {
+  ArrowUpRight,
+  ExternalLink,
+  Lock,
+  Globe,
+  Sparkles,
+} from "lucide-react";
 import MotionButton from "./Extras/MotionButton";
 
 function GithubIcon({ className = "w-4 h-4" }) {
@@ -33,7 +39,7 @@ function cleanDomainUrl(url, fallback = "app.local") {
 
 /**
  * Editorial Project Showcase Item
- * 
+ *
  * Renders an expansive, asymmetric editorial showcase with balanced negative space,
  * crisp typography, interactive high-resolution preview canvas, and full responsive support.
  */
@@ -48,7 +54,7 @@ export default function ProjectCard({
 
   const displayUrl = cleanDomainUrl(
     project.liveUrl || project.githubUrl,
-    `${project.id}.internal`
+    `${project.id}.internal`,
   );
 
   const targetLink = project.liveUrl || project.githubUrl;
@@ -89,7 +95,9 @@ export default function ProjectCard({
     >
       <div
         className={`grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-10 lg:gap-12 xl:gap-12 items-center ${
-          isReversed ? "lg:[&>.visual-col]:order-1 lg:[&>.content-col]:order-2" : ""
+          isReversed
+            ? "lg:[&>.visual-col]:order-1 lg:[&>.content-col]:order-2"
+            : ""
         }`}
       >
         {/* =================================================================== */}
@@ -97,11 +105,17 @@ export default function ProjectCard({
         {/* =================================================================== */}
         <div className="content-col w-full lg:col-span-5 flex flex-col justify-center order-2 lg:order-1">
           {/* Metadata Header Pill & Project Index */}
-          <motion.div variants={itemVariants} className="flex items-center gap-3 mb-4 sm:mb-5">
+          <motion.div
+            variants={itemVariants}
+            className="flex items-center gap-3 mb-4 sm:mb-5"
+          >
             <span className="font-mono text-xs sm:text-sm font-bold tracking-widest text-accent">
               PROJECT // {project.number || String(index + 1).padStart(2, "0")}
             </span>
-            <span className="w-5 sm:w-8 h-px bg-border-subtle" aria-hidden="true" />
+            <span
+              className="w-5 sm:w-8 h-px bg-border-subtle"
+              aria-hidden="true"
+            />
             <span className="text-[10px] sm:text-xs font-mono font-medium tracking-wider text-subtle uppercase">
               {project.category}
             </span>
@@ -148,14 +162,14 @@ export default function ProjectCard({
           {(project.discipline || project.role) && (
             <motion.div
               variants={itemVariants}
-              className="grid grid-cols-2 gap-4 py-3 sm:py-4 mb-6 sm:mb-7 border-y border-border-subtle text-xs font-mono"
+              className="grid grid-cols-2 gap-4 py-3 sm:py-4 mb-4 sm:mb-7 border-y border-border-subtle text-xs font-mono"
             >
               {project.discipline && (
                 <div>
                   <span className="text-[10px] text-subtle uppercase tracking-wider block mb-0.5">
                     Discipline
                   </span>
-                  <span className="text-onyx font-medium truncate block">
+                  <span className="text-onyx font-medium block">
                     {project.discipline}
                   </span>
                 </div>
@@ -165,7 +179,7 @@ export default function ProjectCard({
                   <span className="text-[10px] text-subtle uppercase tracking-wider block mb-0.5">
                     Role & Scope
                   </span>
-                  <span className="text-onyx font-medium truncate block">
+                  <span className="text-onyx font-medium block">
                     {project.role}
                   </span>
                 </div>
@@ -174,7 +188,10 @@ export default function ProjectCard({
           )}
 
           {/* Technologies Stack Chips */}
-          <motion.div variants={itemVariants} className="space-y-2 mb-5 sm:mb-6">
+          <motion.div
+            variants={itemVariants}
+            className="space-y-2 mb-5 sm:mb-6"
+          >
             <span className="text-[10px] font-mono tracking-wider text-subtle/80 uppercase block">
               Technology Stack
             </span>
@@ -202,7 +219,7 @@ export default function ProjectCard({
                 rel="noopener noreferrer"
                 variant="primary"
                 size="sm"
-                className="px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-medium"
+                className="px-2 sm:px-4 py-2 sm:py-2 text-xs font-medium"
                 icon={<ArrowUpRight className="w-3.5 h-3.5" />}
                 iconPosition="right"
               >
@@ -222,7 +239,7 @@ export default function ProjectCard({
                 rel="noopener noreferrer"
                 variant="secondary"
                 size="sm"
-                className="px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-medium"
+                className="px-4 sm:px-4 py-2 sm:py-2 text-xs font-medium"
                 icon={<GithubIcon className="w-3.5 h-3.5" />}
                 iconPosition="left"
               >
@@ -242,7 +259,8 @@ export default function ProjectCard({
         <div className="visual-col w-full lg:col-span-7 order-1 lg:order-2">
           <motion.div
             variants={itemVariants}
-            className="relative w-full aspect-[16/10] sm:aspect-[14/7.5] rounded-2xl sm:rounded-3xl overflow-hidden bg-surface border border-border-subtle shadow-sm hover:shadow-xl transition-all duration-700 group/canvas"
+            style={{ aspectRatio: project.aspectRatio || "16 / 9" }}
+            className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-surface border border-border-subtle shadow-sm hover:shadow-xl transition-all duration-700 group/canvas flex items-center justify-center"
           >
             {/* Subtle Ambient Theme Backlight Glow */}
             <div
@@ -264,7 +282,7 @@ export default function ProjectCard({
               </div>
             )}
 
-            {/* High-Resolution Project Screenshot */}
+            {/* High-Resolution Project Screenshot (Full image visible, zero cropping) */}
             {project.image && !imgError ? (
               <img
                 src={project.image}
@@ -272,7 +290,7 @@ export default function ProjectCard({
                 onLoad={() => setImgLoaded(true)}
                 onError={() => setImgError(true)}
                 loading="lazy"
-                className={`w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover/canvas:scale-[1.03] ${
+                className={`w-full h-full object-contain object-center transition-transform duration-700 ease-out group-hover/canvas:scale-[1.015] ${
                   imgLoaded ? "opacity-100" : "opacity-0"
                 }`}
               />
@@ -289,37 +307,65 @@ export default function ProjectCard({
               </div>
             )}
 
-            {/* Editorial Glass Overlay Top Bar */}
-            <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-10 flex items-center gap-2 pointer-events-none">
-              <div className="px-3 py-1 rounded-full bg-onyx/70 backdrop-blur-md border border-white/10 text-white text-[10px] sm:text-[11px] font-mono flex items-center gap-2 shadow-sm">
+            {/* Editorial Overlay Top Bar: Guaranteed High Contrast on Light or Dark Background */}
+            {/* <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-10 flex items-center gap-2 pointer-events-none">
+              <div
+                className={`px-3 py-1 rounded-full text-[10px] sm:text-[11px] font-mono flex items-center gap-2 shadow-lg backdrop-blur-md transition-colors duration-300 ${
+                  project.topBg === "light"
+                    ? "bg-neutral-950/95 text-white border border-white/20"
+                    : "bg-white/95 text-neutral-950 border border-neutral-300/80"
+                }`}
+              >
                 <span
                   className={`w-1.5 h-1.5 rounded-full ${
-                    project.liveUrl ? "bg-emerald-400 animate-pulse" : "bg-amber-400"
+                    project.liveUrl
+                      ? project.topBg === "light"
+                        ? "bg-emerald-400 animate-pulse"
+                        : "bg-emerald-600 animate-pulse"
+                      : "bg-amber-400"
                   }`}
                   aria-hidden="true"
                 />
-                <span className="tracking-tight">{displayUrl}</span>
+                <span className="tracking-tight font-medium">{displayUrl}</span>
               </div>
 
               {project.status && (
-                <div className="hidden sm:flex px-2.5 py-1 rounded-full bg-onyx/50 backdrop-blur-md border border-white/10 text-white/80 text-[10px] font-mono tracking-wider uppercase">
+                <div
+                  className={`hidden sm:flex px-2.5 py-1 rounded-full text-[10px] font-mono tracking-wider uppercase backdrop-blur-md shadow-sm transition-colors duration-300 ${
+                    project.topBg === "light"
+                      ? "bg-neutral-900/90 text-neutral-200 border border-white/15"
+                      : "bg-neutral-100/95 text-neutral-800 border border-neutral-300/80 font-semibold"
+                  }`}
+                >
                   {project.status}
                 </div>
               )}
-            </div>
+            </div> */}
 
-            {/* Floating Action Badge on Visual (Hover Reveal & Accessible Click) */}
+            {/* Floating Action Badge on Visual: Guaranteed High Contrast on Light or Dark Background */}
             {targetLink && (
               <a
                 href={targetLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={`Open ${project.title} live preview in a new tab`}
-                className="absolute inset-0 z-20 flex items-end justify-end p-4 sm:p-5 focus-visible:outline-2 focus-visible:outline-accent"
+                className="absolute inset-0 z-20 flex items-end justify-end p-3 sm:p-5 focus-visible:outline-2 focus-visible:outline-accent rounded-2xl sm:rounded-3xl"
               >
-                <div className="px-3.5 sm:px-4 py-2 rounded-full bg-onyx/85 hover:bg-onyx text-white backdrop-blur-md border border-white/15 text-xs font-mono font-medium flex items-center gap-2 shadow-lg opacity-90 sm:opacity-0 sm:group-hover/canvas:opacity-100 sm:translate-y-2 sm:group-hover/canvas:translate-y-0 transition-all duration-300">
+                <div
+                  className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-mono font-semibold flex items-center gap-2 shadow-xl transition-all duration-300 ${
+                    project.bottomBg === "light"
+                      ? "bg-neutral-950 hover:bg-neutral-900 text-white border border-white/25"
+                      : "bg-white hover:bg-neutral-100 text-neutral-950 border border-neutral-300"
+                  } opacity-95 sm:opacity-0 sm:group-hover/canvas:opacity-100 sm:translate-y-1 sm:group-hover/canvas:translate-y-0`}
+                >
                   <span>Explore Project</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-accent" />
+                  <ExternalLink
+                    className={`w-3.5 h-3.5 ${
+                      project.bottomBg === "light"
+                        ? "text-blue-400"
+                        : "text-accent"
+                    }`}
+                  />
                 </div>
               </a>
             )}

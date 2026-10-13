@@ -25,6 +25,9 @@ export const PROJECTS_DATA = [
     liveUrl: "https://www.smartsolarsolution.in/",
     image: "/images/projects/solartile.avif",
     themeGlow: "rgba(245, 158, 11, 0.15)",
+    aspectRatio: "3202 / 1679",
+    topBg: "light",
+    bottomBg: "dark",
   },
   {
     id: "wanderlust",
@@ -44,6 +47,9 @@ export const PROJECTS_DATA = [
     liveUrl: "https://wanderlust-ebon-iota.vercel.app/",
     image: "/images/projects/wanderlust.avif",
     themeGlow: "rgba(16, 185, 129, 0.15)",
+    aspectRatio: "3202 / 1679",
+    topBg: "light",
+    bottomBg: "light",
   },
   {
     id: "restuara",
@@ -63,6 +69,9 @@ export const PROJECTS_DATA = [
     liveUrl: "https://restaura-5ea34.netlify.app/",
     image: "/images/projects/restaura.avif",
     themeGlow: "rgba(244, 63, 94, 0.15)",
+    aspectRatio: "3202 / 1679",
+    topBg: "dark",
+    bottomBg: "dark",
   },
   {
     id: "green-cart-logistics",
@@ -82,6 +91,9 @@ export const PROJECTS_DATA = [
     liveUrl: null,
     image: "/images/projects/greencart.jpg",
     themeGlow: "rgba(20, 184, 166, 0.15)",
+    aspectRatio: "1376 / 768",
+    topBg: "dark",
+    bottomBg: "dark",
   },
   {
     id: "blog-platform",
@@ -101,6 +113,9 @@ export const PROJECTS_DATA = [
     liveUrl: "https://blog-platform-six-zeta.vercel.app/",
     image: "/images/projects/blog-platform.jpg",
     themeGlow: "rgba(249, 115, 22, 0.15)",
+    aspectRatio: "1376 / 768",
+    topBg: "dark",
+    bottomBg: "dark",
   },
 ];
 
@@ -261,8 +276,8 @@ export default function ProjectsSection() {
               Ready to engineer your next digital platform?
             </h4>
             <p className="text-xs sm:text-sm text-subtle leading-relaxed">
-              Every system is built with performance, responsive scalability, and
-              meticulous attention to interaction detail.
+              Every system is built with performance, responsive scalability,
+              and meticulous attention to interaction detail.
             </p>
           </div>
 

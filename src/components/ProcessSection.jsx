@@ -62,7 +62,7 @@ const StepCard = ({ step, index, isLast }) => {
       */}
       {!isLast && (
         <div
-          className="md:hidden absolute left-[19px] sm:left-[21px] top-11 sm:top-12 bottom-[-3rem] sm:bottom-[-4rem] w-[2px] bg-border-subtle z-0"
+          className="md:hidden absolute left-4.75 sm:left-5.25 top-11 sm:top-12 -bottom-12 sm:-bottom-16 w-0.5 bg-border-subtle z-0"
           aria-hidden="true"
         />
       )}
