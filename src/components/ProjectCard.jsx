@@ -203,7 +203,7 @@ export default function ProjectCard({ project, isActive }) {
         LEFT COLUMN: EDITORIAL METADATA & CONTENT
         [AUDIT FIX: Fluid font sizes & paddings preventing vertical overlap at 110% zoom]
       */}
-      <div className="w-full lg:col-span-5 flex flex-col justify-center h-auto lg:h-full py-0.5 sm:py-1 order-1 lg:order-1">
+      <div className="w-full lg:col-span-5 flex flex-col justify-center h-auto lg:h-full py-1 sm:py-1 mt-4 lg:mt-0 order-1 lg:order-1">
         <div className="space-y-1 sm:space-y-1.5 lg:space-y-2.5">
           <motion.div
             initial={false}
