@@ -79,7 +79,7 @@ export default function Footer() {
       className="relative bg-porcelain text-onyx pt-16 sm:pt-20 pb-8 overflow-hidden border-t border-border-subtle transition-colors duration-700"
     >
       {/* Background Dot Texture */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.018] bg-[radial-gradient(var(--onyx)_1px,transparent_1px)] bg-[size:24px_24px]" />
+      <div className="absolute inset-0 pointer-events-none opacity-[0.018] bg-[radial-gradient(var(--onyx)_1px,transparent_1px)] bg-size-[24px_24px]" />
 
       <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-12 relative z-10">
         <motion.div
@@ -96,7 +96,7 @@ export default function Footer() {
                 MJ
               </div>
               {/* [AUDIT FIX: Replaced invalid sm:max-w-105 with standard sm:max-w-[420px]] */}
-              <div className="w-full max-w-[280px] sm:max-w-[420px] text-onyx">
+              <div className="w-full max-w-70 sm:max-w-105 text-onyx">
                 <Signature />
               </div>
             </div>

@@ -154,7 +154,7 @@ export default function About() {
                   whileTap={{ scale: 0.97 }}
                   className="flex items-center justify-center gap-1 sm:gap-1.5 px-2 py-1.5 sm:px-3.5 sm:py-2 rounded-full bg-onyx/4 dark:bg-white/6 border border-border-subtle hover:border-onyx/20 dark:hover:border-white/20 text-[9px] min-[390px]:text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider text-subtle hover:text-onyx transition-colors cursor-default select-none whitespace-nowrap min-w-0"
                 >
-                  <span className="text-xs shrink-0">{tag.icon}</span>
+                  <span className="truncate min-[420px]:hidden">{tag.icon}</span>
                   <span className="shrink-0">{tag.text}</span>
                 </motion.span>
               ))}
