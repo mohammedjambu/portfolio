@@ -149,9 +149,9 @@ export default function ServicesSection() {
         </div>
 
         {/* --- MAIN STAGE LAYOUT --- */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full flex flex-col lg:grid lg:grid-cols-12 gap-8 sm:gap-4 lg:gap-10 xl:gap-16 items-center grow justify-center my-auto min-h-0 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-4 lg:gap-10 xl:gap-16 items-center grow justify-center my-auto min-h-0 overflow-hidden">
           {/* LEFT: POSTER TRANSITION + DESCRIPTION */}
-          <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-start gap-1 sm:gap-2 lg:gap-5 w-full shrink-0">
+          <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-start mt-4 lg:mt-0 gap-1 sm:gap-2 lg:gap-5 w-full shrink-0">
             {/* Featured Portrait Card */}
             <div className="relative aspect-5/6 h-[205px] sm:h-[165px] md:h-[195px] lg:h-auto w-auto lg:w-full max-w-[235px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[315px] xl:max-w-[300px] lg:max-h-[38vh] xl:max-h-[46vh] rounded-2xl sm:rounded-3xl lg:rounded-4xl overflow-hidden shadow-lg lg:shadow-2xl bg-surface border border-border-subtle p-1 sm:p-1.5 mx-auto lg:mx-0 transition-colors duration-700">
               <div className="relative w-full h-full rounded-[0.95rem] sm:rounded-[1.2rem] lg:rounded-[1.6rem] overflow-hidden bg-onyx/5">
@@ -176,7 +176,7 @@ export default function ServicesSection() {
             </div>
 
             {/* Description Text */}
-            <div className="max-w-[280px] sm:max-w-[360px] lg:max-w-[320px] xl:max-w-[360px] mx-auto lg:mx-0 min-h-[38px] sm:min-h-[44px] lg:min-h-15 text-center mt-4 sm:mt-1 lg:mt-0 lg:text-left px-1 lg:px-0">
+            <div className="max-w-[280px] sm:max-w-[360px] lg:max-w-[320px] xl:max-w-[360px] mx-auto lg:mx-0 min-h-[38px] sm:min-h-[44px] lg:min-h-15 text-center mt-2 sm:mt-1 lg:mt-0 lg:text-left px-1 lg:px-0">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={activeIndex}
