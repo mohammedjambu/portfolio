@@ -246,7 +246,7 @@ export default function ProjectCard({ project, isActive }) {
             initial={false}
             animate={{ opacity: isActive ? 1 : 0.3, y: isActive ? 0 : 8 }}
             transition={{ duration: 0.6, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-            className="text-xs xl:text-sm text-subtle leading-relaxed line-clamp-3 max-w-md"
+            className="text-xs xl:text-sm text-subtle leading-relaxed max-w-md"
           >
             {project.description}
           </motion.p>
@@ -366,7 +366,7 @@ export default function ProjectCard({ project, isActive }) {
 
       {/* MOBILE LOWER CONTENT (Compact layout so all elements remain in-frame on phones) */}
       <div className="w-full flex lg:hidden flex-col space-y-2 pt-2 border-t border-border-subtle order-3">
-        <p className="text-[11px] sm:text-xs text-subtle leading-relaxed line-clamp-2">
+        <p className="text-[11.5px] sm:text-xs text-subtle leading-relaxed">
           {project.description}
         </p>
 

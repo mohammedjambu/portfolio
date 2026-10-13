@@ -216,7 +216,7 @@ export default function TechStack() {
         >
           <div className="flex items-center gap-3 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full bg-surface border border-border-subtle hover:scale-105 transition-all duration-300 shadow-xs">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-            <span className="text-[10.5px] sm:text-xs font-bold font-mono uppercase tracking-[0.2em] text-onyx">
+            <span className="text-[10px] sm:text-xs font-bold font-mono uppercase tracking-[0.2em] text-onyx">
               FROM INTERFACE TO INFRASTRUCTURE
             </span>
           </div>
