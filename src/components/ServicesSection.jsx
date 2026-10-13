@@ -34,14 +34,14 @@ const SERVICES_DATA = [
     title: "CRM & Business Systems",
     description:
       "Replacing scattered tools and repetitive work, with connected systems that keep your data, workflows, and team moving in sync.",
-    image: "/images/services/interactive.png",
+    image: "/images/profile.avif",
   },
   {
     id: "05",
     title: "UI/UX & Digital Branding",
     description:
       "Giving ideas a visual language, from interface systems and user flows to the details that make a digital product feel unmistakably yours.",
-    image: "/images/services/performance.png",
+    image: "/images/myimage.avif",
   },
 ];
 
@@ -176,7 +176,7 @@ export default function ServicesSection() {
             </div>
 
             {/* Description Text */}
-            <div className="max-w-[300px] sm:max-w-[360px] lg:max-w-[320px] xl:max-w-[360px] mx-auto lg:mx-0 min-h-[38px] sm:min-h-[44px] lg:min-h-15 text-center mt-2 sm:mt-1 lg:mt-0 lg:text-left px-1 lg:px-0">
+            <div className="max-w-[280px] sm:max-w-[360px] lg:max-w-[320px] xl:max-w-[360px] mx-auto lg:mx-0 min-h-[38px] sm:min-h-[44px] lg:min-h-15 text-center mt-4 sm:mt-1 lg:mt-0 lg:text-left px-1 lg:px-0">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={activeIndex}
@@ -223,7 +223,7 @@ export default function ServicesSection() {
                       delay: index * 0.07,
                       ease: [0.16, 1, 0.3, 1],
                     }}
-                    className="relative group w-full text-left py-2 sm:py-3 lg:py-3.5 xl:py-4.5 px-3.5 sm:px-5 lg:px-6 xl:px-7 rounded-2xl lg:rounded-3xl transition-all duration-300 cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-accent hover:bg-onyx/[0.03] dark:hover:bg-porcelain/[0.04]"
+                    className="relative group w-full text-left py-2.5 sm:py-3 lg:py-3.5 xl:py-4.5 px-3.5 sm:px-5 lg:px-6 xl:px-7 rounded-2xl lg:rounded-3xl transition-all duration-300 cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-accent hover:bg-onyx/[0.03] dark:hover:bg-porcelain/[0.04]"
                   >
                     {/* Active highlighted pill */}
                     {isActive && (
