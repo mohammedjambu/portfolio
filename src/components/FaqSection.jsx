@@ -192,7 +192,7 @@ export default function FaqSection() {
             {/* Background Watermark (Static fixed text as originally designed) */}
             <div
               aria-hidden="true"
-              className="mt-8 sm:mt-10 opacity-[0.06] font-display text-[14vw] sm:text-[12vw] lg:text-[10vw] font-bold uppercase leading-none select-none pointer-events-none text-onyx transition-colors duration-700"
+              className="mt-8 sm:mt-10 opacity-[0.06] font-display text-[14vw] sm:text-[12vw] lg:text-[10vw] text-center lg:text-left font-bold uppercase leading-none select-none pointer-events-none text-onyx transition-colors duration-700"
             >
               Questions
             </div>

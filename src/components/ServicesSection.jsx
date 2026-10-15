@@ -141,19 +141,24 @@ export default function ServicesSection() {
                 </span>
               </h2>
             </div>
-            <p className="max-w-xs xl:max-w-xs text-xs sm:text-sm font-mono text-subtle uppercase tracking-wider hidden lg:block leading-relaxed">
-              FROM FIRST IMPRESSION TO BACKEND LOGIC I BUILD THE DIGITAL SYSTEMS
+            {/* [AUDIT FIX: Added em-dash for clean grammar] */}
+            <p className="max-w-xs xl:max-w-sm text-xs sm:text-sm font-mono text-subtle uppercase tracking-wider hidden lg:block leading-relaxed">
+              FROM FIRST IMPRESSION TO BACKEND LOGIC — I BUILD THE DIGITAL SYSTEMS
               BEHIND GOOD IDEAS.
             </p>
           </motion.div>
         </div>
 
         {/* --- MAIN STAGE LAYOUT --- */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-4 lg:gap-10 xl:gap-16 items-center grow justify-center my-auto min-h-0 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 w-full flex flex-col lg:grid lg:grid-cols-12 gap-3 sm:gap-4 lg:gap-10 xl:gap-16 items-center grow justify-center my-auto min-h-0 overflow-hidden">
           {/* LEFT: POSTER TRANSITION + DESCRIPTION */}
-          <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-start mt-4 lg:mt-0 gap-1 sm:gap-2 lg:gap-5 w-full shrink-0">
-            {/* Featured Portrait Card */}
-            <div className="relative aspect-5/6 h-[205px] sm:h-[165px] md:h-[195px] lg:h-auto w-auto lg:w-full max-w-[235px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[315px] xl:max-w-[300px] lg:max-h-[38vh] xl:max-h-[46vh] rounded-2xl sm:rounded-3xl lg:rounded-4xl overflow-hidden shadow-lg lg:shadow-2xl bg-surface border border-border-subtle p-1 sm:p-1.5 mx-auto lg:mx-0 transition-colors duration-700">
+          <div className="lg:col-span-5 flex flex-col justify-center items-center lg:items-start mt-2 sm:mt-3 lg:mt-0 gap-2 sm:gap-3 lg:gap-4 w-full shrink-0">
+            {/* 
+              [AUDIT FIX: Progressive fluid dimensions]
+              Replaced erratic jumpy heights (205px -> 165px -> 195px) and inverted xl clamp
+              with smooth, monotonic scaling.
+            */}
+            <div className="relative aspect-4/5 w-[180px] sm:w-[220px] md:w-[250px] lg:w-full max-w-[210px] sm:max-w-[240px] md:max-w-[270px] lg:max-w-[310px] xl:max-w-[340px] max-h-[29vh] sm:max-h-[31vh] lg:max-h-[38vh] xl:max-h-[44vh] rounded-2xl sm:rounded-3xl lg:rounded-4xl overflow-hidden shadow-lg lg:shadow-2xl bg-surface border border-border-subtle p-1 sm:p-1.5 mx-auto lg:mx-0 transition-colors duration-700">
               <div className="relative w-full h-full rounded-[0.95rem] sm:rounded-[1.2rem] lg:rounded-[1.6rem] overflow-hidden bg-onyx/5">
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.div
@@ -175,8 +180,11 @@ export default function ServicesSection() {
               </div>
             </div>
 
-            {/* Description Text */}
-            <div className="max-w-[280px] sm:max-w-[360px] lg:max-w-[320px] xl:max-w-[360px] mx-auto lg:mx-0 min-h-[38px] sm:min-h-[44px] lg:min-h-15 text-center mt-2 sm:mt-1 lg:mt-0 lg:text-left px-1 lg:px-0">
+            {/* 
+              [AUDIT FIX: Fixed invalid lg:min-h-15]
+              Replaced invalid lg:min-h-15 with standard lg:min-h-[60px] to stabilize description height.
+            */}
+            <div className="max-w-[280px] sm:max-w-[360px] lg:max-w-[310px] xl:max-w-[340px] mx-auto lg:mx-0 min-h-[42px] sm:min-h-[48px] lg:min-h-[60px] text-center mt-1 sm:mt-1.5 lg:mt-0 lg:text-left px-1 lg:px-0">
               <AnimatePresence mode="wait">
                 <motion.p
                   key={activeIndex}
@@ -197,7 +205,7 @@ export default function ServicesSection() {
             <div
               role="tablist"
               aria-label="Capabilities list"
-              className="flex flex-col gap-2 sm:gap-1.5 lg:gap-1.5 xl:gap-2 relative w-full"
+              className="flex flex-col gap-1.5 sm:gap-2 lg:gap-1.5 xl:gap-2 relative w-full"
             >
               {SERVICES_DATA.map((service, index) => {
                 const isActive = activeIndex === index;
@@ -223,7 +231,12 @@ export default function ServicesSection() {
                       delay: index * 0.07,
                       ease: [0.16, 1, 0.3, 1],
                     }}
-                    className="relative group w-full text-left py-2.5 sm:py-3 lg:py-3.5 xl:py-4.5 px-3.5 sm:px-5 lg:px-6 xl:px-7 rounded-2xl lg:rounded-3xl transition-all duration-300 cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-accent hover:bg-onyx/[0.03] dark:hover:bg-porcelain/[0.04]"
+                    /* [AUDIT FIX: Hover background only applied when !isActive to avoid dark mode double-highlight] */
+                    className={`relative group w-full text-left py-2.5 sm:py-3 lg:py-3.5 xl:py-4.5 px-3.5 sm:px-5 lg:px-6 xl:px-7 rounded-2xl lg:rounded-3xl transition-all duration-300 cursor-pointer select-none focus-visible:outline-2 focus-visible:outline-accent ${
+                      !isActive
+                        ? "hover:bg-onyx/[0.03] dark:hover:bg-porcelain/[0.04]"
+                        : ""
+                    }`}
                   >
                     {/* Active highlighted pill */}
                     {isActive && (
@@ -241,12 +254,16 @@ export default function ServicesSection() {
                     <div className="relative z-10 flex items-center justify-between gap-2.5 sm:gap-3">
                       <div className="flex items-center gap-2.5 sm:gap-3.5 md:gap-5 lg:gap-8 xl:gap-10 min-w-0 flex-1">
                         <span
-                          className={`font-mono text-xs sm:text-sm font-bold transition-colors duration-500 shrink-0 ${isActive ? "text-porcelain/75" : "text-subtle"}`}
+                          className={`font-mono text-xs sm:text-sm font-bold transition-colors duration-500 shrink-0 ${
+                            isActive ? "text-porcelain/75" : "text-subtle"
+                          }`}
                         >
                           ({service.id})
                         </span>
                         <h3
-                          className={`text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl font-bold tracking-tight transition-colors duration-500 min-w-0 leading-snug break-words ${isActive ? "text-porcelain" : "text-onyx"}`}
+                          className={`text-sm sm:text-base md:text-lg lg:text-lg xl:text-xl font-bold tracking-tight transition-colors duration-500 min-w-0 leading-snug break-words ${
+                            isActive ? "text-porcelain" : "text-onyx"
+                          }`}
                         >
                           {service.title}
                         </h3>
