@@ -168,7 +168,7 @@ export default function HeroImageTransition() {
             }}
           >
             <img
-              src="/images/myimage.jpg"
+              src="/images/myimage.avif"
               alt="Mohammed Jambughoda portrait"
               className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-105 pointer-events-none"
               loading="eager"
@@ -186,7 +186,7 @@ export default function HeroImageTransition() {
             }}
           >
             <img
-              src="/images/profile_about.jpg"
+              src="/images/profile_about.avif"
               alt="Mohammed Jambughoda - About"
               className="w-full h-full object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-105 pointer-events-none"
               loading="lazy"

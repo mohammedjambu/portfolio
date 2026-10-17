@@ -13,35 +13,35 @@ const SERVICES_DATA = [
     title: "Landing Pages & Marketing Websites",
     description:
       "Turning your first impression into a reason to stay, with clear messaging, purposeful layouts, and interactions designed to move visitors toward action.",
-    image: "/images/services/fullstack.png",
+    image: "/images/services/services_01.avif",
   },
   {
     id: "02",
     title: "E-Commerce Experiences",
     description:
       "Designing storefronts that make browsing effortless, products easy to understand, and the path from discovery to checkout feel natural.",
-    image: "/images/services/frontend.png",
+    image: "/images/services/services_02.avif",
   },
   {
     id: "03",
     title: "Custom Web Applications",
     description:
       "From a rough idea to a working product, I design and build tailored web applications around the way your business actually works.",
-    image: "/images/services/web.svg",
+    image: "/images/services/services_03.avif",
   },
   {
     id: "04",
     title: "CRM & Business Systems",
     description:
       "Replacing scattered tools and repetitive work, with connected systems that keep your data, workflows, and team moving in sync.",
-    image: "/images/profile.avif",
+    image: "/images/services/services_04.avif",
   },
   {
     id: "05",
     title: "UI/UX & Digital Branding",
     description:
       "Giving ideas a visual language, from interface systems and user flows to the details that make a digital product feel unmistakably yours.",
-    image: "/images/myimage.avif",
+    image: "/images/services/services_05.avif",
   },
 ];
 

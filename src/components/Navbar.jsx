@@ -229,7 +229,7 @@ export default function Navbar() {
             className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-full overflow-hidden border border-border-subtle hover:scale-105 transition-transform duration-300 focus-visible:outline-2 focus-visible:outline-accent"
           >
             <img
-              src="/images/myimage.jpg"
+              src="/images/myimage.avif"
               alt="Mohammed Jambughoda"
               className="w-full h-full object-cover"
               loading="eager"
